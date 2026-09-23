@@ -1,143 +1,161 @@
-# Evalio
+<div align="center">
+  <h1 style="margin-bottom: 0.25rem;">Evalio</h1>
+  <p style="margin-top: 0; color: #6b7280;">AI-powered hackathon evaluation platform — automated code analysis, market research, and LLM scoring.</p>
+  <p>
+    <img alt="Python" src="https://img.shields.io/badge/Python-3.8%2B-3776AB?logo=python&logoColor=white" />
+    <img alt="FastAPI" src="https://img.shields.io/badge/FastAPI-0.110-009688?logo=fastapi&logoColor=white" />
+    <img alt="LangChain" src="https://img.shields.io/badge/LangChain-0.1-1C3C3C?logo=langchain&logoColor=white" />
+  </p>
+  <p>
+    <img alt="PostgreSQL" src="https://img.shields.io/badge/PostgreSQL-336791?logo=postgresql&logoColor=white" />
+    <img alt="ChromaDB" src="https://img.shields.io/badge/ChromaDB-vector%20store-E85D04" />
+    <img alt="HuggingFace" src="https://img.shields.io/badge/HuggingFace-embeddings-FFD21E?logo=huggingface&logoColor=black" />
+    <img alt="OpenAPI" src="https://img.shields.io/badge/OpenAPI-3.0-6BA539?logo=openapiinitiative&logoColor=white" />
+  </p>
+</div>
 
-An AI-powered hackathon project evaluation platform that automates code analysis, market research, and scoring using LLMs. Evalio provides comprehensive project assessment through specialized agents that analyze code quality, tech stack, innovation potential, and market viability.
+---
 
-## Features
+## Overview
 
-- **Automated Code Analysis** - Analyzes GitHub repositories for code quality, tech stack, and best practices
-- **Market Analysis** - Evaluates market potential, competitors, and revenue models using web search
-- **LLM-Based Scoring** - Generates overall project scores (0-10) with detailed explanations
-- **Hackathon Management** - Create hackathons with custom evaluation criteria
-- **Leaderboard** - Rank projects based on AI-generated scores
-- **Semantic Search** - Search projects using vector embeddings
+Evalio is a full-stack evaluation engine for hackathons. It automates project scoring by combining static code analysis, live web research, and LLM reasoning — so judges spend time on decisions, not reading code.
+
+- 🤖 **Code Agent** — ingests a GitHub repository via `gitingest`, builds a Chroma vector store from the source, and evaluates each hackathon criterion through RAG.
+- 📊 **Market Agent** — fetches the project README and runs DuckDuckGo searches to assess market fit, competitors, and revenue potential.
+- 🧮 **LLM Scoring** — after both agents complete, a final LLM pass synthesizes findings into a 0–10 score with bullet-point explanations.
+- 🏆 **Leaderboard** — ranked project list per hackathon based on overall scores.
+- 🔍 **Semantic Search** — natural-language project search using HuggingFace sentence embeddings.
+- 💬 **Chat Agent** — project-aware Q&A with conversation history, backed by code analysis context.
+
+When a project is submitted, `invoke_code_agent` and `invoke_market_agent` run as fire-and-forget `asyncio` tasks. Both write results back to PostgreSQL, then `generate_overall_project_score` triggers automatically.
+
+---
+
+## Table of Contents
+
+- [Structure](#structure)
+- [Tech Stack](#tech-stack)
+- [Architecture](#architecture)
+- [Quick Start](#quick-start)
+- [Environment](#environment)
+- [OpenAPI](#openapi)
+
+## Structure
+
+```
+evalio/
+  server.py           # FastAPI entry point — loads .env, initialises DB, mounts routers
+  db.py               # PostgreSQL connection + init_db() with auto-migrations
+  agents/
+    codeagent.py      # GitHub repo ingestion, Chroma vectorstore, per-criterion RAG
+    marketagent.py    # README fetch + DuckDuckGo research + LLM market analysis
+    crudagent.py      # CRUD endpoints, LLM overall scoring, semantic search
+    chatagent.py      # Simple chat + project-aware conversational agent
+  docs/
+    spec.yaml         # OpenAPI 3.0 specification
+  SQL_SCHEMA.sql      # Full DB schema with indexes and migration helpers
+  requirements.txt
+  .env.example
+```
+
+## Tech Stack
+
+- **API:** Python 3.8+, FastAPI, Uvicorn
+- **AI / LLM:** LangChain, LangChain-OpenAI (OpenAI-compatible), LangChain-HuggingFace
+- **Vector Store:** ChromaDB with `sentence-transformers/all-MiniLM-L6-v2`
+- **Repo Ingestion:** `gitingest`
+- **Web Search:** `ddgs` (DuckDuckGo)
+- **Database:** PostgreSQL via `psycopg2`
+
+## Architecture
+
+```mermaid
+flowchart LR
+  submit[POST /api/create-project] --> crud[CRUDAgent]
+  crud -->|asyncio task| code[CodeAgent]
+  crud -->|asyncio task| market[MarketAgent]
+  code -->|gitingest| repo[GitHub Repo]
+  repo --> chroma[Chroma\nVectorstore]
+  chroma -->|RAG| llm[LLM]
+  market -->|gitingest| readme[README]
+  market -->|ddgs| web[DuckDuckGo]
+  readme & web --> llm
+  llm --> score[Overall Score]
+  score --> pg[(PostgreSQL)]
+  pg --> leaderboard[GET /api/get-hackathon-leaderboard]
+```
 
 ## Quick Start
 
-### Prerequisites
+1. **Configure environment**
 
-- Python 3.8+
-- PostgreSQL running with a database (configure `DB_HOST`, `DB_PORT`, `DB_NAME`)
-- GitHub API token (optional, increases rate limit)
-
-### Setup
-
-1. Clone the repository and navigate to the project directory
-
-2. Create and configure environment variables:
 ```bash
 cp .env.example .env
+# Edit .env with your values
 ```
-Edit `.env` and fill in your values:
-- `LLM_API_KEY` - Your LLM API key
-- `LLM_BASE_URL` - Your LLM API endpoint
-- `HF_TOKEN` - HuggingFace token for embeddings
-- `DB_HOST` - Database host (default: localhost)
-- `DB_PORT` - Database port (default: 5432)
-- `DB_NAME` - Database name (default: evalio)
-- `DB_USER` - Database user (default: postgres)
-- `DB_PASSWORD` - Database password
-- `GITHUB_TOKEN` - GitHub API token (optional)
 
-3. Install dependencies:
+2. **Install dependencies**
+
 ```bash
 pip install -r requirements.txt
 ```
 
-4. Run the server:
+3. **Ensure PostgreSQL is running** — tables are created automatically on first start via `init_db()`.
+
+4. **Start the server**
+
 ```bash
 python server.py
 ```
 
-The server runs on `http://0.0.0.0:8000`
+Server runs on `http://0.0.0.0:8000`.
 
-- Swagger UI: http://localhost:8000/docs
-- ReDoc: http://localhost:8000/redoc
+- Swagger UI: `http://localhost:8000/docs`
+- ReDoc: `http://localhost:8000/redoc`
 
-## Environment Variables
+## Environment
 
 | Variable | Description | Default |
-|----------|-------------|---------|
-| `LLM_API_KEY` | LLM API key | Required |
-| `LLM_BASE_URL` | LLM API endpoint | `https://api.example.com/v1` |
-| `FREE_LLM_MODEL` | LLM model to use | `liquid/lfm-2.5-1.2b-thinking:free` |
-| `HF_TOKEN` | HuggingFace token | Required |
-| `EMBEDDING_MODEL` | Embedding model | `sentence-transformers/all-MiniLM-L6-v2` |
+|---|---|---|
+| `LLM_API_KEY` | API key for the LLM endpoint | Required |
+| `LLM_BASE_URL` | OpenAI-compatible API base URL | `https://api.example.com/v1` |
+| `FREE_LLM_MODEL` | Model identifier | `liquid/lfm-2.5-1.2b-thinking:free` |
+| `HF_TOKEN` | HuggingFace token for embedding model download | Required |
+| `EMBEDDING_MODEL` | Sentence transformer model | `sentence-transformers/all-MiniLM-L6-v2` |
 | `DB_HOST` | PostgreSQL host | `localhost` |
 | `DB_PORT` | PostgreSQL port | `5432` |
-| `DB_NAME` | PostgreSQL database | `evalio` |
-| `DB_USER` | PostgreSQL username | `postgres` |
-| `DB_PASSWORD` | PostgreSQL password | Required |
-| `GITHUB_TOKEN` | GitHub API token | Optional |
-| `CORS_ORIGINS` | Allowed CORS origins (comma-separated) | `https://your-frontend.vercel.app` |
-| `BASE_PROMPT` | Base prompt template | Optional |
+| `DB_NAME` | Database name | `evalio` |
+| `DB_USER` | Database username | `postgres` |
+| `DB_PASSWORD` | Database password | Required |
+| `GITHUB_TOKEN` | GitHub token for private repos | — |
+| `CORS_ORIGINS` | Comma-separated allowed origins. Empty = allow all | — |
+| `BASE_PROMPT` | System prompt prefix prepended to all LLM calls | — |
 
-## Requirements
+## OpenAPI
 
-```
-fastapi>=0.110.0
-uvicorn>=0.27.1
-starlette>=0.36.0
-psycopg2-binary>=2.9.9
-langchain>=0.1.14
-langchain-core>=0.1.0
-langchain-community>=0.0.38
-langchain-openai>=0.1.0
-langchain-huggingface>=0.1.0
-langchain-chroma>=0.1.0
-langchain-text-splitters>=0.0.1
-openai>=1.14.0
-chromadb>=0.4.24
-sentence-transformers>=2.2.2
-huggingface-hub>=0.20.0
-torch>=2.0.0
-transformers>=4.36.0
-gitpython>=3.1.40
-ddgs>=1.0.0
-python-dotenv>=1.0.0
-requests>=2.31.0
-numpy>=1.26.3,<2
-pydantic>=2.6.0,<3
-pandas>=2.1.4
-tiktoken>=0.5.2
-httpx>=0.27.0
-tenacity>=8.2.3
-pyyaml>=6.0.1
-aiohttp>=3.9.5
-```
-
-## API Endpoints
+Full API specification: `docs/spec.yaml`
 
 ### Hackathons
-- `POST /api/create-hackathon` - Create hackathon with criteria
-- `GET /api/get-hackathon/{id}` - Get hackathon details
-- `GET /api/get-all-hackathons` - List all hackathons
+- `POST /api/create-hackathon` — create a hackathon with custom criteria
+- `GET /api/get-hackathon/{id}` — get hackathon details
+- `GET /api/get-all-hackathons` — list all hackathons
 
 ### Projects
-- `POST /api/create-project` - Submit project to hackathon
-- `GET /api/get-project/{id}` - Get project with analyses and score
-- `GET /api/get-hackathon-projects/{hackathon_id}` - List projects in hackathon
-- `GET /api/get-all` - List all projects
+- `POST /api/create-project` — submit a project; triggers async code + market analysis
+- `GET /api/get-project/{project_id}` — get project with full AI analyses and score
+- `GET /api/get-hackathon-projects/{hackathon_id}` — list projects in a hackathon
+- `GET /api/get-all` — list all projects
 
 ### Scoring
-- `GET /api/get-project-score/{project_id}` - Get LLM-generated score with explanation
-- `GET /api/get-hackathon-leaderboard/{hackathon_id}` - Get ranked projects
+- `GET /api/get-project-score/{project_id}` — 0–10 score with explanation
+- `GET /api/get-hackathon-leaderboard/{hackathon_id}` — ranked project list
 
-## Project Structure
+### Agents
+- `POST /api/code-agent/analyze` — analyze a repo directly
+- `POST /api/market-agent/analyze` — analyze market potential for any idea
+- `POST /api/chat-agent` — project-aware conversational agent
+- `POST /api/chat-agent/simple` — simple Q&A without project context
 
-```
-server.py         - FastAPI entry point, initializes DB
-db.py            - PostgreSQL connection and table creation
-agents/
-  marketagent.py  - Market analysis (web search + README)
-  codeagent.py    - Code analysis (GitHub repo analysis)
-  chatagent.py    - Chat functionality
-  crudagent.py    - CRUD operations + LLM scoring
-```
-
-## How It Works
-
-1. **Submit Project** - Create a hackathon and submit projects with GitHub links
-2. **Code Analysis** - Code agent fetches and analyzes repository contents against hackathon criteria
-3. **Market Analysis** - Market agent researches market potential and competitors
-4. **Scoring** - LLM evaluates all factors and generates overall score with explanation
-5. **Leaderboard** - View ranked projects based on AI-generated scores
+### Utilities
+- `POST /api/search` — semantic search across all projects
+- `POST /api/review` — mark a project as reviewed
