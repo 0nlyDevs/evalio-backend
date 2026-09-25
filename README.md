@@ -97,7 +97,7 @@ docker compose up --build
 | `LLM_API_KEY` | Key for the OpenAI-compatible endpoint | required for AI judging |
 | `LLM_BASE_URL` | Endpoint | `https://openrouter.ai/api/v1` |
 | `LLM_MODEL` (or `FREE_LLM_MODEL`) | Model id | `liquid/lfm-2.5-1.2b-thinking:free` |
-| `LLM_FALLBACK_MODELS` | Comma-separated models tried when the main one fails; `/health` reports model availability | `openrouter/free` on OpenRouter |
+| `LLM_FALLBACK_MODELS` | Comma-separated models tried when the main one fails; `/health` reports model availability | free models from the provider catalog (`openrouter/free` on OpenRouter) |
 | `BASE_PROMPT` | Text prepended to every system prompt | – |
 | `DB_HOST` / `DB_PORT` / `DB_NAME` / `DB_USER` / `DB_PASSWORD` | PostgreSQL | `localhost` / `5432` / `evalio` / `postgres` / `postgres` |
 | `GITHUB_TOKEN` | Clone private repos / avoid rate limits | – |
