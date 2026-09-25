@@ -9,13 +9,17 @@ import json
 import logging
 import re
 import threading
+import time
 from typing import Annotated, Any, TypeVar
+from urllib.parse import urlparse
 
 from openai import (
     APIConnectionError,
+    APIStatusError,
     APITimeoutError,
     BadRequestError,
     InternalServerError,
+    NotFoundError,
     OpenAI,
     RateLimitError,
 )
@@ -48,6 +52,18 @@ def is_configured() -> bool:
     return bool(settings.llm_api_key)
 
 
+def provider_host() -> str:
+    return (urlparse(settings.llm_base_url).hostname or "").lower()
+
+
+def model_chain() -> list[str]:
+    """Main model followed by fallbacks, without duplicates."""
+    fallbacks = list(settings.llm_fallback_models)
+    if not fallbacks and provider_host().endswith("openrouter.ai"):
+        fallbacks = ["openrouter/free"]
+    return list(dict.fromkeys(m for m in [settings.llm_model, *fallbacks] if m))
+
+
 def _get_client() -> OpenAI:
     global _client
     if _client is None:
@@ -64,6 +80,57 @@ def _get_client() -> OpenAI:
 
 _TRANSIENT = (APIConnectionError, APITimeoutError, RateLimitError, InternalServerError)
 
+# model -> reason it can't be used; model -> unix time until which it is skipped
+_missing_models: dict[str, str] = {}
+_cooldown_until: dict[str, float] = {}
+_COOLDOWN_SECONDS = 300
+_health_lock = threading.Lock()
+
+
+def check_models() -> dict:
+    """Ask the provider which models exist and flag configured ones that don't.
+
+    Runs once at startup; a provider that can't list models is simply not checked."""
+    status = {"checked": False, "missing": []}
+    if not is_configured():
+        return status
+    try:
+        available = {m.id for m in _get_client().models.list()}
+    except Exception as exc:
+        log.info("Could not list models from %s: %s", provider_host(), exc)
+        return status
+    status["checked"] = True
+    for model in model_chain():
+        if model not in available:
+            with _health_lock:
+                _missing_models[model] = "not offered by the provider"
+            status["missing"].append(model)
+    if settings.llm_model in status["missing"]:
+        log.error(
+            "LLM_MODEL %r does not exist on %s. Set LLM_MODEL to a valid model id; using fallbacks %s meanwhile.",
+            settings.llm_model, provider_host(), model_chain()[1:] or "none",
+        )
+    return status
+
+
+def model_status() -> dict:
+    with _health_lock:
+        missing = dict(_missing_models)
+        cooling = {m: round(t - time.time()) for m, t in _cooldown_until.items() if t > time.time()}
+    return {
+        "provider": provider_host(),
+        "model": settings.llm_model,
+        "fallback_models": model_chain()[1:],
+        "model_available": settings.llm_model not in missing,
+        "unavailable_models": missing,
+        "cooling_down": cooling,
+    }
+
+
+def _usable(model: str) -> bool:
+    with _health_lock:
+        return model not in _missing_models and _cooldown_until.get(model, 0) <= time.time()
+
 
 @retry(
     retry=retry_if_exception_type(_TRANSIENT),
@@ -78,6 +145,26 @@ def _create(**kwargs: Any) -> str:
     return response.choices[0].message.content or ""
 
 
+def _is_model_error(exc: APIStatusError) -> bool:
+    text = str(exc).lower()
+    return isinstance(exc, NotFoundError) or any(
+        needle in text for needle in ("not a valid model", "model not found", "no endpoints found", "does not exist", "unknown model")
+    )
+
+
+def _call_model(model: str, kwargs: dict[str, Any]) -> str:
+    global _json_mode_supported
+    try:
+        return _create(model=model, **kwargs)
+    except BadRequestError as exc:
+        if "response_format" in kwargs and not _is_model_error(exc):
+            log.info("Provider rejected response_format, falling back to prompt-only JSON")
+            _json_mode_supported = False
+            kwargs.pop("response_format")
+            return _create(model=model, **kwargs)
+        raise
+
+
 def complete(
     messages: list[dict[str, str]],
     *,
@@ -85,8 +172,11 @@ def complete(
     max_tokens: int = 1500,
     json_mode: bool = False,
 ) -> str:
-    """Run a chat completion and return the assistant text (reasoning removed)."""
-    global _json_mode_supported
+    """Run a chat completion and return the assistant text (reasoning removed).
+
+    Tries the main model, then each fallback model. A model the provider says
+    doesn't exist is skipped from then on; one that keeps failing is paused
+    for a few minutes so later calls go straight to a working model."""
     if not is_configured():
         raise LLMError("LLM_API_KEY is not configured")
 
@@ -96,28 +186,41 @@ def complete(
             *messages[1:],
         ]
 
-    kwargs: dict[str, Any] = {
-        "model": settings.llm_model,
-        "messages": messages,
-        "temperature": temperature,
-        "max_tokens": max_tokens,
-    }
+    kwargs: dict[str, Any] = {"messages": messages, "temperature": temperature, "max_tokens": max_tokens}
     if json_mode and _json_mode_supported:
         kwargs["response_format"] = {"type": "json_object"}
 
-    try:
-        text = _create(**kwargs)
-    except BadRequestError as exc:
-        if "response_format" in kwargs:
-            log.info("Provider rejected response_format, falling back to prompt-only JSON")
-            _json_mode_supported = False
-            kwargs.pop("response_format")
-            text = _create(**kwargs)
-        else:
-            raise LLMError(f"LLM request rejected: {exc}") from exc
-    except _TRANSIENT as exc:
-        raise LLMError(f"LLM unavailable: {exc}") from exc
-    return strip_reasoning(text)
+    chain = model_chain()
+    candidates = [m for m in chain if _usable(m)] or chain  # never give up without trying something
+    errors: list[str] = []
+    for model in candidates:
+        try:
+            text = _call_model(model, dict(kwargs))
+            with _health_lock:
+                _cooldown_until.pop(model, None)
+            return strip_reasoning(text)
+        except APIStatusError as exc:
+            if _is_model_error(exc):
+                with _health_lock:
+                    _missing_models[model] = f"HTTP {exc.status_code}: model not available"
+            elif exc.status_code >= 500 or exc.status_code == 429:
+                with _health_lock:
+                    _cooldown_until[model] = time.time() + _COOLDOWN_SECONDS
+            elif exc.status_code in (401, 403):
+                raise LLMError(f"The LLM provider rejected the API key (HTTP {exc.status_code}). Check LLM_API_KEY.") from exc
+            else:
+                raise LLMError(f"LLM request rejected by {model}: {exc}") from exc
+            errors.append(f"{model}: HTTP {exc.status_code}")
+            log.warning("Model %s failed (%s), trying the next one", model, exc.status_code)
+        except (APIConnectionError, APITimeoutError) as exc:
+            with _health_lock:
+                _cooldown_until[model] = time.time() + _COOLDOWN_SECONDS
+            errors.append(f"{model}: {type(exc).__name__}")
+
+    hint = ""
+    if settings.llm_model in _missing_models:
+        hint = f" LLM_MODEL '{settings.llm_model}' does not exist on {provider_host()}; set a valid model id."
+    raise LLMError(f"No model could answer ({'; '.join(errors)}).{hint}")
 
 
 _REASONING_BLOCKS = re.compile(
