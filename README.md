@@ -1,13 +1,17 @@
 <div align="center">
-  <h1 style="margin-bottom: 0.25rem;">Evalio</h1>
-  <p style="margin-top: 0; color: #6b7280;">An AI hackathon jury — three specialised judges read the code, research the market and test the product, then a head judge ranks every submission.</p>
+  <img src="docs/evalio.svg" alt="Evalio" width="96" height="96" />
+  <h1>Evalio API</h1>
+  <p><b>The AI hackathon jury</b> — three judges read the code, research the market and test the product; a head judge ranks every submission.</p>
   <p>
-    <img alt="Python" src="https://img.shields.io/badge/Python-3.11%2B-3776AB?logo=python&logoColor=white" />
-    <img alt="FastAPI" src="https://img.shields.io/badge/FastAPI-0.115-009688?logo=fastapi&logoColor=white" />
-    <img alt="PostgreSQL" src="https://img.shields.io/badge/PostgreSQL-queue%20%2B%20storage-336791?logo=postgresql&logoColor=white" />
-    <img alt="ChromaDB" src="https://img.shields.io/badge/ChromaDB-code%20index-E85D04" />
-    <img alt="OpenAI compatible" src="https://img.shields.io/badge/LLM-OpenAI%20compatible-412991" />
+    <img alt="Python" src="https://img.shields.io/badge/Python-3.11+-3776AB?style=flat-square&logo=python&logoColor=white" />
+    <img alt="FastAPI" src="https://img.shields.io/badge/FastAPI-0.115-009688?style=flat-square&logo=fastapi&logoColor=white" />
+    <img alt="PostgreSQL" src="https://img.shields.io/badge/PostgreSQL-queue%20%2B%20storage-4169E1?style=flat-square&logo=postgresql&logoColor=white" />
+    <img alt="ChromaDB" src="https://img.shields.io/badge/ChromaDB-code%20index-FF6B57?style=flat-square" />
+    <img alt="OpenAI compatible" src="https://img.shields.io/badge/LLM-OpenAI%20compatible-412991?style=flat-square&logo=openai&logoColor=white" />
+    <img alt="DuckDuckGo" src="https://img.shields.io/badge/Web%20search-DuckDuckGo-DE5833?style=flat-square&logo=duckduckgo&logoColor=white" />
+    <img alt="Docker" src="https://img.shields.io/badge/Docker-compose-2496ED?style=flat-square&logo=docker&logoColor=white" />
   </p>
+  <sub>Frontend: <a href="https://github.com/0nlyDevs/EVALIO--FRONTEND">EVALIO--FRONTEND</a> (Next.js · Tailwind · Motion)</sub>
 </div>
 
 ---
@@ -60,32 +64,6 @@ flowchart LR
 - **Robust LLM layer** – works with any OpenAI-compatible endpoint; strips reasoning tags, extracts
   JSON tolerant of markdown/trailing commas, validates with pydantic and self-repairs once. Without an
   API key the Code Judge still scores from measured signals.
-
-## Structure
-
-```
-server.py              FastAPI app, lifespan (migrations + in-process worker)
-worker.py              Standalone worker process
-config.py              All settings (env vars)
-db.py                  Connection pool, helpers, idempotent migrations
-agents/
-  base.py              Judge context, shared criterion scoring + rubric
-  code_agent.py        Code Judge
-  market_agent.py      Market Judge
-  product_agent.py     Product Judge
-  head_judge.py        Weighted score, integrity flags, verdict
-  chat_agent.py        Project-aware chat (panel reports + code retrieval)
-pipeline/
-  evaluation.py        Orchestrates the jury for one project
-  queue.py             PostgreSQL job queue + worker threads
-routes/                HTTP endpoints and request/response schemas
-services/
-  repo_ingest.py       Clone, file filtering, metrics, stack detection, secrets scan, chunking
-  vectorstore.py       Chroma collections (per-project code + cross-project search)
-  web_search.py        DuckDuckGo search with de-duplication
-  criteria.py          Criteria parsing, weights, judge routing
-  llm.py               OpenAI-compatible client with JSON repair
-```
 
 ## Quick start
 
