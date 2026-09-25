@@ -36,6 +36,9 @@ class Settings:
     )
     llm_timeout: int = _int("LLM_TIMEOUT", 90)
     llm_max_retries: int = _int("LLM_MAX_RETRIES", 3)
+    # Tried in order when the main model errors out (comma separated). Defaults to
+    # OpenRouter's zero-cost router when the endpoint is OpenRouter.
+    llm_fallback_models: list[str] = field(default_factory=lambda: _list("LLM_FALLBACK_MODELS"))
     base_prompt: str = os.getenv("BASE_PROMPT", "").strip()
 
     # Database

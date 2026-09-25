@@ -1,4 +1,5 @@
 import logging
+import threading
 from contextlib import asynccontextmanager
 
 import uvicorn
@@ -32,6 +33,8 @@ async def lifespan(app: FastAPI):
         worker.start()
     if not llm.is_configured():
         logging.warning("LLM_API_KEY is not set: judges will fall back to measured signals only")
+    else:
+        threading.Thread(target=llm.check_models, name="llm-model-check", daemon=True).start()
     yield
     if worker:
         worker.stop()
@@ -93,6 +96,7 @@ def health():
         "database": ping(),
         "llm_configured": llm.is_configured(),
         "model": settings.llm_model,
+        "llm": llm.model_status(),
         "worker": settings.run_worker,
     }
 

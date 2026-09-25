@@ -12,6 +12,7 @@ import threading
 from config import settings
 from db import close_pool, init_db
 from pipeline.queue import Worker
+from services.llm import check_models
 
 logging.basicConfig(level=logging.INFO, format="%(asctime)s %(levelname)s %(name)s: %(message)s")
 for noisy in ("httpx", "ddgs", "primp", "chromadb"):
@@ -20,6 +21,7 @@ for noisy in ("httpx", "ddgs", "primp", "chromadb"):
 
 def main() -> None:
     init_db()
+    check_models()
     worker = Worker(settings.worker_concurrency)
     worker.start()
     stop = threading.Event()
