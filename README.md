@@ -65,6 +65,14 @@ flowchart LR
   JSON tolerant of markdown/trailing commas, validates with pydantic and self-repairs once. Without an
   API key the Code Judge still scores from measured signals.
 
+## Showcase
+
+Every deployment starts with **Evalio Showcase**, six real public repositories (KOKORO, COKEY, KOTORI, NUGGET,
+Air Quality ETL and Vercel's chatbot template) judged end to end, plus an **Open Sandbox** to submit your own.
+Repository snapshots and web sources in `demo/data/` come from Evalio's own ingestion and search; scorecards,
+weighted scores and integrity flags are computed by the jury at startup (`demo/seed.py`). Showcase data is
+read-only and re-created if missing.
+
 ## Quick start
 
 ```bash
@@ -98,6 +106,7 @@ docker compose up --build
 | `WORKER_CONCURRENCY` | Worker threads per process | `2` |
 | `REPO_MAX_CHUNKS` | Max code chunks indexed per repo | `1200` |
 | `WEB_SEARCH_ENABLED` | Let the Market Judge search the web | `true` |
+| `SEED_DEMO` | Seed the showcase hackathon with example evaluations and an open sandbox | `true` |
 | `CORS_ORIGINS` | Comma-separated origins (empty = all) | – |
 
 A larger model gives noticeably better judgements; the free default works but is terse.

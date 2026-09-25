@@ -64,7 +64,8 @@ def create_hackathon(body: HackathonCreate):
 
 @router.patch("/update-hackathon/{hackathon_id}", summary="Update a hackathon (e.g. open/close submissions)")
 def update_hackathon(hackathon_id: int, body: HackathonUpdate):
-    get_hackathon_row(hackathon_id)
+    if get_hackathon_row(hackathon_id).get("is_demo"):
+        raise HTTPException(status_code=403, detail="Showcase hackathons can't be edited")
     fields = body.model_dump(exclude_unset=True)
     if "criteria" in fields:
         criteria = normalize_criteria(fields.pop("criteria"))

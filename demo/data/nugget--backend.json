@@ -1,0 +1,279 @@
+{
+ "snapshot": {
+  "repo": {
+   "url": "https://github.com/colombefioren/NUGGET--BACKEND",
+   "owner": "colombefioren",
+   "name": "NUGGET--BACKEND",
+   "host": "github.com",
+   "branch": "main",
+   "commit": "d4d658d1df00"
+  },
+  "ingested_at": "2026-09-25T11:57:15.382647+00:00",
+  "files": {
+   "tracked": 21,
+   "analyzed": 17,
+   "code_files": 12,
+   "code_loc": 758,
+   "skipped": 4
+  },
+  "languages": [
+   {
+    "name": "Python",
+    "loc": 758,
+    "files": 12,
+    "share": 0.898
+   },
+   {
+    "name": "Markdown",
+    "loc": 50,
+    "files": 1,
+    "share": 0.059
+   },
+   {
+    "name": "TOML",
+    "loc": 36,
+    "files": 1,
+    "share": 0.043
+   }
+  ],
+  "largest_files": [
+   {
+    "path": "app/main.py",
+    "loc": 148
+   },
+   {
+    "path": "app/retrieval.py",
+    "loc": 120
+   },
+   {
+    "path": "app/store.py",
+    "loc": 105
+   },
+   {
+    "path": "app/loaders.py",
+    "loc": 97
+   },
+   {
+    "path": "app/llm.py",
+    "loc": 81
+   },
+   {
+    "path": "tests/test_api.py",
+    "loc": 53
+   },
+   {
+    "path": "app/schemas.py",
+    "loc": 51
+   },
+   {
+    "path": "README.md",
+    "loc": 50
+   }
+  ],
+  "dependencies": {
+   "pip": [
+    "chromadb",
+    "fastapi",
+    "fastembed",
+    "langchain-chroma",
+    "langchain-openai",
+    "langchain-text-splitters",
+    "pydantic",
+    "pydantic-settings",
+    "pypdf",
+    "python-docx",
+    "python-multipart",
+    "uvicorn"
+   ]
+  },
+  "stack": {
+   "frameworks": [
+    {
+     "id": "FASTAPI",
+     "label": "FastAPI"
+    }
+   ],
+   "libraries": [
+    "ChromaDB",
+    "Pydantic"
+   ],
+   "primary_type": "FASTAPI",
+   "frontend_only": false
+  },
+  "signals": {
+   "has_readme": true,
+   "readme_chars": 2955,
+   "readme_sections": 4,
+   "has_tests": true,
+   "test_files": 3,
+   "has_ci": false,
+   "has_docker": false,
+   "has_license": false,
+   "has_env_example": true,
+   "has_linter": false,
+   "has_type_checking": false,
+   "has_gitignore": true,
+   "committed_secrets_risk": [],
+   "hardcoded_secrets": [],
+   "committed_dependencies": false
+  },
+  "history": {
+   "commit_count": 6,
+   "truncated": false,
+   "first_commit_at": "2026-09-07T15:31:43+03:00",
+   "last_commit_at": "2026-09-25T14:34:05+03:00",
+   "contributors": [
+    {
+     "name": "colombefioren",
+     "commits": 6
+    }
+   ],
+   "commits_per_day": {
+    "2026-09-07": 2,
+    "2026-09-25": 4
+   },
+   "low_quality_messages": 0,
+   "recent_commits": [
+    {
+     "sha": "d4d658d1df",
+     "author": "COCO",
+     "date": "2026-09-25T14:34:05+03:00",
+     "subject": "feat: add lightweight healthz liveness endpoint"
+    },
+    {
+     "sha": "e7bceaf4c2",
+     "author": "COCO",
+     "date": "2026-09-25T14:10:05+03:00",
+     "subject": "docs: add aesthetic readme with logo and stack"
+    },
+    {
+     "sha": "d43efc8512",
+     "author": "COCO",
+     "date": "2026-09-25T14:09:43+03:00",
+     "subject": "refactor: rename lumen to nugget"
+    },
+    {
+     "sha": "5c3cd00afd",
+     "author": "COCO",
+     "date": "2026-09-25T08:53:25+03:00",
+     "subject": "feat: hybrid multilingual RAG with streaming and document management"
+    },
+    {
+     "sha": "f7db7a1eb8",
+     "author": "colombefioren",
+     "date": "2026-09-07T15:35:16+03:00",
+     "subject": "feat: wire xKiro LLM and local FastEmbed embeddings"
+    },
+    {
+     "sha": "0aff9f6da8",
+     "author": "colombefioren",
+     "date": "2026-09-07T15:31:43+03:00",
+     "subject": "feat: add FastAPI backend with LangChain RAG pipeline"
+    }
+   ],
+   "commit_dates": [
+    "2026-09-25T14:34:05+03:00",
+    "2026-09-25T14:10:05+03:00",
+    "2026-09-25T14:09:43+03:00",
+    "2026-09-25T08:53:25+03:00",
+    "2026-09-07T15:35:16+03:00",
+    "2026-09-07T15:31:43+03:00"
+   ]
+  },
+  "tree": ".env.example\n.gitignore\n.python-version\nREADME.md\npyproject.toml\napp/ (9 files)\ntests/ (3 files)",
+  "readme": "<div align=\"center\">\n\n<picture>\n  <source media=\"(prefers-color-scheme: dark)\" srcset=\"docs/logo-dark.png\">\n  <img src=\"docs/logo.png\" alt=\"Nugget\" width=\"260\">\n</picture>\n\n### the api that digs the nugget out of your docs\n\nMultilingual hybrid-search RAG: local embeddings, BM25 + vectors, streamed cited answers.\n\n![Python](https://img.shields.io/badge/Python_3.12-18141e?style=for-the-badge&logo=python&logoColor=FFBF2E)\n![FastAPI](https://img.shields.io/badge/FastAPI-18141e?style=for-the-badge&logo=fastapi&logoColor=A6F0CE)\n![LangChain](https://img.shields.io/badge/LangChain-18141e?style=for-the-badge&logo=langchain&logoColor=CCBAFF)\n![Chroma](https://img.shields.io/badge/ChromaDB-18141e?style=for-the-badge&logo=databricks&logoColor=FF48A0)\n![ONNX](https://img.shields.io/badge/FastEmbed_\u00b7_ONNX-18141e?style=for-the-badge&logo=onnx&logoColor=A6DCFF)\n![uv](https://img.shields.io/badge/uv-18141e?style=for-the-badge&logo=astral&logoColor=FFBF2E)\n\n[\u2190 Frontend](https://github.com/colombefioren/NUGGET--FRONTEND) \u00b7 **Backend**\n\n</div>\n\n## \u2726 How it digs\n\n```mermaid\nflowchart LR\n  F[PDF \u00b7 DOCX \u00b7 HTML \u00b7 MD \u00b7 CSV \u00b7 JSON] --> S[chunk per page] --> E[multilingual embeddings<br/>local ONNX] --> C[(Chroma)]\n  Q[question] --> R[rewrite follow-up] --> H{vectors + BM25<br/>RRF fusion}\n  C --> H --> L[any OpenAI-compatible LLM] -- SSE + citations --> A[answer]\n```\n\n- **Hybrid retrieval**: dense vectors for meaning, BM25 (accent folding, CJK bigrams) for exact terms, merged with reciprocal rank fusion\n- **Cross-lingual**: ask in Japanese about a French PDF and get the answer in Japanese\n- **Grounded**: every claim carries an `[n]` citation. Follow-ups are rewritten into standalone search queries first\n- **Private indexing**: embeddings are computed on your machine, and re-uploaded files are deduplicated by content hash\n\n## \u2726 Run it\n\n```bash\ncp .env.example .env     # set NUGGET_API_BASE, NUGGET_CHAT_MODEL, NUGGET_API_KEY\nuv sync\nuv run uvicorn app.main:app --reload --port 8000\n```\n\n| Env | |\n| --- | --- |\n| `NUGGET_API_BASE` \u00b7 `NUGGET_CHAT_MODEL` | **required**, any OpenAI-compatible endpoint + model |\n| `NUGGET_API_KEY` | needed to generate answers (retrieval works without it) |\n| `NUGGET_EMBEDDING_MODEL` | default `paraphrase-multilingual-MiniLM-L12-v2` |\n| `NUGGET_TOP_K` \u00b7 `NUGGET_CHUNK_SIZE` \u00b7 `NUGGET_MAX_UPLOAD_MB` | `6` \u00b7 `1000` \u00b7 `25` |\n\n## \u2726 Endpoints\n\n| | |\n| --- | --- |\n| `POST /query/stream` | SSE: `sources` \u2192 `token`\u2026 \u2192 `done` |\n| `POST /query` | `{ question, history",
+  "indexed_chunks": 0
+ },
+ "sources": [
+  {
+   "id": 1,
+   "title": "Local RAG, Document Chat & Vector DBs Compared 2026",
+   "url": "https://www.promptquorum.com/power-local-llm/local-llm-knowledge-retrieval-compared",
+   "domain": "promptquorum.com",
+   "snippet": "Tools that let a local model work with your own documents fall into five different kinds \u2014 RAG frameworks and pipelines, document and PDF chat apps, vector databases, notes-app integrations, and local search and research tools \u2014 and no single feature list compares them fairly."
+  },
+  {
+   "id": 2,
+   "title": "GitHub - Cinnamon/kotaemon: An open-source RAG-based tool for chatting ...",
+   "url": "https://github.com/Cinnamon/kotaemon",
+   "domain": "github.com",
+   "snippet": "Host your own document QA (RAG) web-UI: Support multi-user login, organize your files in private/public collections, collaborate and share your favorite chat with others. Organize your LLM & Embedding models: Support both local LLMs & popular API providers (OpenAI, Azure, Ollama, Groq). Hybrid RAG pipeline: Sane default RAG pipeline with hybrid (full-text & vector) retriever and re-ranking to ..."
+  },
+  {
+   "id": 3,
+   "title": "5 Awesome AnythingLLM Alternatives in 2026 - sliplane.io",
+   "url": "https://sliplane.io/blog/5-awesome-anythingllm-alternatives",
+   "domain": "sliplane.io",
+   "snippet": "Discover 5 powerful alternatives to AnythingLLM for RAG, AI agents, and document chat. Compare Dify, Open WebUI, LibreChat, Flowise, and Onyx by features, pricing, and use cases."
+  },
+  {
+   "id": 4,
+   "title": "GitHub - ntluong95/document-RAG: An open-source RAG-based tool for ...",
+   "url": "https://github.com/ntluong95/document-RAG",
+   "domain": "github.com",
+   "snippet": "An open-source clean & customizable RAG UI for chatting with your documents. Built with both end users and developers in mind. Live Demo | Online Install | User Guide | Developer Guide | Feedback | Contact"
+  },
+  {
+   "id": 5,
+   "title": "Local RAG: Chat With Your Documents (Open Source, Private)",
+   "url": "https://dev.to/lingdas1/local-rag-chat-with-your-documents-open-source-private-390o",
+   "domain": "dev.to",
+   "snippet": "Upload PDFs, code, research papers, or entire books \u2014 then ask your local LLM questions about them. Covers Open WebUI RAG, AnythingLLM, and LangChain RAG. No data ever leaves your machine. Tagged with rag, llm, opensource, tutorial."
+  },
+  {
+   "id": 6,
+   "title": "Better RAG Accuracy with Hybrid BM25 + Dense Vector Search | by Patricia | Jan, 2026 | Medium",
+   "url": "https://medium.com/@pbronck/better-rag-accuracy-with-hybrid-bm25-dense-vector-search-ea99d48cba93",
+   "domain": "medium.com",
+   "snippet": "January 3, 2026 - # E.V.A. Cascading Retrieval: Achieving ... Vector Search \u00b7 **A production deep-dive into hybrid retrieval combining sparse BM25, dense FAISS vectors, and cross-encoder reranking across 159 multilingual documents**..."
+  },
+  {
+   "id": 7,
+   "title": "Hybrid Search for RAG: BM25, Vector Retrieval, and RRF Architecture | Data Science Collective",
+   "url": "https://medium.com/data-science-collective/hybrid-search-for-rag-bm25-vectors-when-each-wins-402f24abaeea",
+   "domain": "medium.com",
+   "snippet": "April 25, 2026 - Build a hybrid RAG retriever that combines BM25, vector search, metadata filters, and Reciprocal Rank Fusion to improve exact identifier lookup and semantic question answering."
+  },
+  {
+   "id": 8,
+   "title": "Hybrid RAG: BM25 + RRF Guide 2026 | AI Workflow Lab",
+   "url": "https://aiworkflowlab.dev/article/how-to-build-hybrid-search-rag-bm25-rrf-fusion-cross-encoder-reranking",
+   "domain": "aiworkflowlab.dev",
+   "snippet": "June 2, 2026 - For multilingual workloads, BAAI/bge-m3 is the strongest open option \u2014 it produces dense, sparse, and multi-vector representations from a single forward pass, which lets you skip running a separate BM25 index entirely."
+  },
+  {
+   "id": 9,
+   "title": "BM25 vs Sparse vs Hybrid Search in RAG \u2014 From Layman to Pro",
+   "url": "https://medium.com/@dewasheesh.rana/bm25-vs-sparse-vs-hybrid-search-in-rag-from-layman-to-pro-e34ff21c4ada",
+   "domain": "medium.com",
+   "snippet": "March 3, 2026 - Layman: BM25 = word match \u2192 Dense = meaning match \u2192 Hybrid = both. Intermediate: BM25 retrieves exact terms, Dense retrieves paraphrases, Hybrid merges both \u2192 higher recall."
+  },
+  {
+   "id": 10,
+   "title": "Hybrid Search RAG That Actually Works: BM25 + Vectors + Reranking in Python | by Tarun Singh | Towards AI",
+   "url": "https://pub.towardsai.net/hybrid-search-rag-that-actually-works-bm25-vectors-reranking-in-python-0c02ade0799d?gi=01705e6d249e",
+   "domain": "pub.towardsai.net",
+   "snippet": "January 19, 2026 - Hybrid Search RAG = BM25 (keywords) + Vectors (semantic) + Reranking (precision)."
+  },
+  {
+   "id": 11,
+   "title": "Enterprise Search Market Size to Hit USD 12.71 Billion by 2035",
+   "url": "https://www.precedenceresearch.com/enterprise-search-market",
+   "domain": "precedenceresearch.com",
+   "snippet": "22 Jan 2026 \u00b7 The U.S. enterprise search market size is calculated at USD 1.56 billion in 2025 and is expected to reach nearly USD 3.79 billion in 2035, ..."
+  },
+  {
+   "id": 12,
+   "title": "AI Enterprise Search Market Research Report 2034 - Dataintelo",
+   "url": "https://dataintelo.com/report/ai-enterprise-search-market",
+   "domain": "dataintelo.com",
+   "snippet": "The AI enterprise search market was valued at $8.6 billion in 2025 and is projected to reach $36.2 billion by 2034, growing at a CAGR of 17.4%."
+  }
+ ],
+ "queries": [
+  "chat with your documents RAG app alternatives",
+  "hybrid search BM25 vector RAG multilingual",
+  "enterprise document AI search market size"
+ ],
+ "demo": null
+}

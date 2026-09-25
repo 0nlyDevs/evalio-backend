@@ -1,0 +1,388 @@
+{
+ "snapshot": {
+  "repo": {
+   "url": "https://github.com/colombefioren/AIR--QUALITY---ETL",
+   "owner": "colombefioren",
+   "name": "AIR--QUALITY---ETL",
+   "host": "github.com",
+   "branch": "preprod",
+   "commit": "114dba3acf26"
+  },
+  "ingested_at": "2026-09-25T11:57:20.490383+00:00",
+  "files": {
+   "tracked": 35,
+   "analyzed": 34,
+   "code_files": 27,
+   "code_loc": 1490,
+   "skipped": 1
+  },
+  "languages": [
+   {
+    "name": "Python",
+    "loc": 1456,
+    "files": 26,
+    "share": 0.834
+   },
+   {
+    "name": "Markdown",
+    "loc": 210,
+    "files": 2,
+    "share": 0.12
+   },
+   {
+    "name": "SQL",
+    "loc": 34,
+    "files": 1,
+    "share": 0.019
+   },
+   {
+    "name": "YAML",
+    "loc": 28,
+    "files": 1,
+    "share": 0.016
+   },
+   {
+    "name": "TOML",
+    "loc": 17,
+    "files": 1,
+    "share": 0.01
+   }
+  ],
+  "largest_files": [
+   {
+    "path": "README.md",
+    "loc": 162
+   },
+   {
+    "path": "src/transform/quality/data_auditor.py",
+    "loc": 147
+   },
+   {
+    "path": "src/load/postgres.py",
+    "loc": 103
+   },
+   {
+    "path": "src/extract/aqi_extractor.py",
+    "loc": 82
+   },
+   {
+    "path": "tests/test_transform/test_data_auditor.py",
+    "loc": 79
+   },
+   {
+    "path": "tests/test_transform/test_dataframe_cleaner.py",
+    "loc": 77
+   },
+   {
+    "path": "aqi_config/settings.py",
+    "loc": 70
+   },
+   {
+    "path": "src/transform/transformer/aqi.py",
+    "loc": 69
+   }
+  ],
+  "dependencies": {
+   "pip": [
+    "apache-airflow",
+    "pandas",
+    "psycopg2-binary",
+    "pytest",
+    "python-dotenv",
+    "requests",
+    "sqlalchemy"
+   ]
+  },
+  "stack": {
+   "frameworks": [],
+   "libraries": [
+    "PostgreSQL",
+    "SQLAlchemy",
+    "pandas",
+    "pytest"
+   ],
+   "primary_type": "OTHER",
+   "frontend_only": false
+  },
+  "signals": {
+   "has_readme": true,
+   "readme_chars": 6210,
+   "readme_sections": 16,
+   "has_tests": true,
+   "test_files": 11,
+   "has_ci": true,
+   "has_docker": false,
+   "has_license": false,
+   "has_env_example": true,
+   "has_linter": false,
+   "has_type_checking": false,
+   "has_gitignore": true,
+   "committed_secrets_risk": [],
+   "hardcoded_secrets": [],
+   "committed_dependencies": false
+  },
+  "history": {
+   "commit_count": 35,
+   "truncated": false,
+   "first_commit_at": "2026-07-07T18:16:32+03:00",
+   "last_commit_at": "2026-08-01T22:36:20+03:00",
+   "contributors": [
+    {
+     "name": "colombefioren",
+     "commits": 18
+    },
+    {
+     "name": "Mathieu-bot",
+     "commits": 8
+    },
+    {
+     "name": "Tsiory Jonathan",
+     "commits": 4
+    },
+    {
+     "name": "Tsiory Jonathan",
+     "commits": 4
+    },
+    {
+     "name": "NickyHariniaina",
+     "commits": 1
+    }
+   ],
+   "commits_per_day": {
+    "2026-07-07": 2,
+    "2026-07-10": 2,
+    "2026-07-17": 18,
+    "2026-07-18": 3,
+    "2026-07-19": 3,
+    "2026-07-20": 2,
+    "2026-07-30": 4,
+    "2026-08-01": 1
+   },
+   "low_quality_messages": 0,
+   "recent_commits": [
+    {
+     "sha": "114dba3acf",
+     "author": "Tsiory Jonathan",
+     "date": "2026-08-01T22:36:20+03:00",
+     "subject": "Merge branch 'prod' into preprod"
+    },
+    {
+     "sha": "9d1c208233",
+     "author": "Tsiory Jonathan",
+     "date": "2026-07-30T15:52:06+03:00",
+     "subject": "fix: add ISO8601 format to to_datetime in build_dim_date"
+    },
+    {
+     "sha": "72d1966293",
+     "author": "colombefioren",
+     "date": "2026-07-30T15:01:45+03:00",
+     "subject": "fix: handle mixed naive/aware datetime strings in build_dim_date"
+    },
+    {
+     "sha": "21495df61f",
+     "author": "colombefioren",
+     "date": "2026-07-30T14:49:08+03:00",
+     "subject": "fix: parse ISO8601 datetime strings in build_dim_date"
+    },
+    {
+     "sha": "3419505228",
+     "author": "colombefioren",
+     "date": "2026-07-30T14:25:51+03:00",
+     "subject": "fix: interpret API timestamps as UTC+3 (Indian/Antananarivo)"
+    },
+    {
+     "sha": "803782515c",
+     "author": "Mathieu-bot",
+     "date": "2026-07-20T14:51:29+03:00",
+     "subject": "fix: add missing DataValidator import in aqi.py (NameError on rebuild_clean)"
+    },
+    {
+     "sha": "e1a8dd96dc",
+     "author": "Mathieu-bot",
+     "date": "2026-07-20T13:02:19+03:00",
+     "subject": "refactor: lazy imports in tasks.py to reduce DAG parse memory (pandas/src modules no longer loaded at parse time)"
+    },
+    {
+     "sha": "4111cc98df",
+     "author": "colombefioren",
+     "date": "2026-07-19T10:42:07+03:00",
+     "subject": "refactor: remove duplicate fact_aqi validation in build_fact_aqi"
+    },
+    {
+     "sha": "d1b6bbbd3c",
+     "author": "colombefioren",
+     "date": "2026-07-19T10:01:09+03:00",
+     "subject": "chore: use sql/schema.sql as single source of truth for ddl"
+    },
+    {
+     "sha": "88c5c9ea2f",
+     "author": "colombefioren",
+     "date": "2026-07-19T09:38:39+03:00",
+     "subject": "chore: align backfill dag import and drop unused constant"
+    },
+    {
+     "sha": "bf73551057",
+     "author": "colombefioren",
+     "date": "2026-07-18T10:56:13+03:00",
+     "subject": "feat: write placeholder architecture md file"
+    },
+    {
+     "sha": "8f91852e59",
+     "author": "colombefioren",
+     "date": "2026-07-18T10:50:04+03:00",
+     "subject": "feat: add placeholder readme"
+    },
+    {
+     "sha": "aa2f72840a",
+     "author": "Tsiory Jonathan",
+     "date": "2026-07-18T10:25:30+03:00",
+     "subject": "chore: untrack data directory"
+    },
+    {
+     "sha": "afa5243603",
+     "author": "Mathieu-bot",
+     "date": "2026-07-17T22:50:21+03:00",
+     "subject": "fix: remove conflict_columns arg from on_conflict_do_nothing (SQLAlchemy 2.0+)"
+    },
+    {
+     "sha": "77a59c9d14",
+     "author": "Mathieu-bot",
+     "date": "2026-07-17T22:42:27+03:00",
+     "subject": "fix: use 'object' dtype instead of 'str' in select_dtypes for pandas compat"
+    }
+   ],
+   "commit_dates": [
+    "2026-08-01T22:36:20+03:00",
+    "2026-07-30T15:52:06+03:00",
+    "2026-07-30T15:01:45+03:00",
+    "2026-07-30T14:49:08+03:00",
+    "2026-07-30T14:25:51+03:00",
+    "2026-07-20T14:51:29+03:00",
+    "2026-07-20T13:02:19+03:00",
+    "2026-07-19T10:42:07+03:00",
+    "2026-07-19T10:01:09+03:00",
+    "2026-07-19T09:38:39+03:00",
+    "2026-07-18T10:56:13+03:00",
+    "2026-07-18T10:50:04+03:00",
+    "2026-07-18T10:25:30+03:00",
+    "2026-07-17T22:50:21+03:00",
+    "2026-07-17T22:42:27+03:00",
+    "2026-07-17T22:26:50+03:00",
+    "2026-07-17T21:47:14+03:00",
+    "2026-07-17T21:17:06+03:00",
+    "2026-07-17T21:10:04+03:00",
+    "2026-07-17T18:05:18+03:00",
+    "2026-07-17T17:58:37+03:00",
+    "2026-07-17T17:22:41+03:00",
+    "2026-07-17T16:50:47+03:00",
+    "2026-07-17T15:24:32+03:00",
+    "2026-07-17T14:58:14+03:00",
+    "2026-07-17T14:56:57+03:00",
+    "2026-07-17T14:55:53+03:00",
+    "2026-07-17T14:51:40+03:00",
+    "2026-07-17T14:47:19+03:00",
+    "2026-07-17T13:35:22+03:00",
+    "2026-07-17T13:35:05+03:00",
+    "2026-07-10T17:47:18+03:00",
+    "2026-07-10T17:47:02+03:00",
+    "2026-07-07T18:21:51+03:00",
+    "2026-07-07T18:16:32+03:00"
+   ]
+  },
+  "tree": ".env.example\n.gitignore\n.python-version\nARCHITECTURE.md\nREADME.md\nmain.py\npyproject.toml\n.github/ (1 files)\n.github/workflows/ (1 files)\naqi_config/ (2 files)\ndags/ (3 files)\nsql/ (1 files)\nsrc/ (9 files)\nsrc/extract/ (1 files)\nsrc/load/ (2 files)\nsrc/transform/ (5 files)\nsrc/transform/quality/ (3 files)\nsrc/transform/transformer/ (2 files)\ntests/ (11 files)\ntests/test_aqi_config/ (1 files)\ntests/test_extract/ (3 files)\ntests/test_load/ (2 files)\ntests/test_transform/ (5 files)",
+  "readme": "<div align=\"center\">\n\n# Air Quality ETL\n\n<img src=\"https://img.shields.io/badge/Python-3776AB?style=for-the-badge&logo=python&logoColor=white\">\n<img src=\"https://img.shields.io/badge/Apache_Airflow-017CEE?style=for-the-badge&logo=apacheairflow&logoColor=white\">\n<img src=\"https://img.shields.io/badge/PostgreSQL-4169E1?style=for-the-badge&logo=postgresql&logoColor=white\">\n<img src=\"https://img.shields.io/badge/Pandas-150458?style=for-the-badge&logo=pandas&logoColor=white\">\n<img src=\"https://img.shields.io/badge/OpenWeather-EB6E4B?style=for-the-badge&logo=openweathermap&logoColor=white\">\n<img src=\"https://img.shields.io/badge/uv-DE5FE9?style=for-the-badge&logo=uv&logoColor=white\">\n<img src=\"https://img.shields.io/badge/pytest-0A9EDC?style=for-the-badge&logo=pytest&logoColor=white\">\n\n</div>\n\nCollects **AQI + 8 pollutant metrics** for six Madagascar cities via the OpenWeather Air Pollution API, cleans and validates the data, and loads it into **PostgreSQL**, orchestrated with **Apache Airflow** DAGs.\n\n| Feed | Purpose | Cadence |\n|---|---|---|\n| Backfill | Historical AQI, 3-12 months back | Run once |\n| Hourly | Live AQI collection | Every hour |\n\n---\n\n## Pipeline\n\n```\n  OpenWeather API\n        \u2502\n        \u25bc\n  Extract \u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u25ba data/raw/{backfill,hourly}/*.csv\n        \u2502\n        \u25bc\n  Clean & Validate \u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u25ba data/clean/hourly_aqi_combined.csv\n        \u2502\n        \u25bc\n  Build Star Schema \u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u25ba data/star_schema/{dim_city,dim_date,fact_aqi}.csv\n        \u2502\n        \u25bc\n  Load to PostgreSQL \u2500\u2500\u2500\u2500\u2500\u2500\u2500\u25ba air_quality database\n```\n\nThe hourly DAG (`air_quality_pipeline`) runs on schedule. The backfill DAG (`backfill`) runs once via the Airflow UI.\n\n---\n\n## Cities\n\n| City | Latitude | Longitude |\n|---|---|---|\n| Antananarivo | -18.8792 | 47.5079 |\n| Toamasina | -18.1443 | 49.3958 |\n| Mahajanga | -15.7167 | 46.3167 |\n| Fianarantsoa | -21.4333 | 47.0833 |\n| Toliara | -23.3500 | 43.6667 |\n| Antsiranana | -12.2667 | 49.2833 |\n\nAll cities are in Madagascar. 6 cities x 12 months x hourly ~155,520 rows.\n\n---\n\n## Star Schema\n\n### `dim_city`\n\n| Column | Type | Description |\n|---|---|---|\n| `city_key` | `INTEGER PK` | Surrogate key |\n| `city_name` | `VARCHAR(100)` | City name |\n| `country` | `VARCHAR(100)` | Country |\n| `latitude` | `DOUBLE PRECISION` | Latitude |\n| `longitude` | `DOUBLE PRECISION` | Longitude |\n\n### `dim_date`\n\n| Column | Type | Description |\n|---|---|---|\n| `date_key` | `INTEGER PK` | Format YYYYMMDDHH |\n| `full_date` | `DATE` | Calendar date |\n| `hour` | `INTE",
+  "indexed_chunks": 0
+ },
+ "sources": [
+  {
+   "id": 1,
+   "title": "Antananarivo Air Quality Index (AQI) : Real-Time Air Pollution",
+   "url": "https://www.aqi.in/dashboard/madagascar/antananarivo",
+   "domain": "aqi.in",
+   "snippet": "Check real-time air quality data from cities across Antananarivo to understand pollution conditions and stay informed about changing environmental health in Antananarivo, Madagascar."
+  },
+  {
+   "id": 2,
+   "title": "Antananarivo, Madagascar Air Quality Index (AQI) Map & Forecast",
+   "url": "https://aqi-world.com/madagascar/antananarivo",
+   "domain": "aqi-world.com",
+   "snippet": "Check the real-time Air Quality Index (AQI) for Antananarivo, Madagascar. View pollution levels, health warnings, and a live map of environmental conditions."
+  },
+  {
+   "id": 3,
+   "title": "Antananarivo Air Quality Index (AQI) Today \u2014 Live PM2.5 ...",
+   "url": "https://aqinow.co/aqi/madagascar/antananarivo/antananarivo-antananarivo",
+   "domain": "aqinow.co",
+   "snippet": "Check Antananarivo, Antananarivo real-time air quality index (AQI). Live PM2.5, PM10 concentrations, health advice, and pollution trends. Updated every hour."
+  },
+  {
+   "id": 4,
+   "title": "Air Pollution in Antananarivo: Real-time Air Quality Index ...",
+   "url": "https://aqicn.org/map/antananarivo/",
+   "domain": "aqicn.org",
+   "snippet": "Our GAIA air quality monitors are very easy to set up: You only need a WIFI access point and a USB compatible power supply. Once connected, your real time air pollution levels are instantaneously available on the maps and through the API."
+  },
+  {
+   "id": 5,
+   "title": "Antananarivo Air Quality Index (AQI) | Air Pollution",
+   "url": "https://www.aqi.in/us/dashboard/madagascar/antananarivo/antananarivo",
+   "domain": "aqi.in",
+   "snippet": "Apr 25, 2026 \u00b7 Current Antananarivo Air Quality Index (AQI) is 21 Good level with real-time air pollution PM2.5 (5\u00b5g/m\u00b3), PM10 (7\u00b5g/m\u00b3), Temperature (23.4\u00b0C) in Antananarivo."
+  },
+  {
+   "id": 6,
+   "title": "Air Pollution",
+   "url": "https://openweathermap.org/api/air-pollution",
+   "domain": "openweathermap.org",
+   "snippet": "Air Pollution API provides current, forecast and historical air pollution data for any coordinates on the globe."
+  },
+  {
+   "id": 7,
+   "title": "Keep your finger on the pulse of Air Pollution API",
+   "url": "https://openweather.co.uk/blog/post/keep-your-finger-pulse-air-pollution-api",
+   "domain": "openweather.co.uk",
+   "snippet": "As a weather data provider, OpenWeather ... free Air Pollution API provides the AQI (Air Quality Index) directly from SILAM - the atmospheric composition model developed by Finnish Meteorological Institute...."
+  },
+  {
+   "id": 8,
+   "title": "Air Pollution - OpenWeather",
+   "url": "https://docs.openweather.co.uk/api/air-pollution",
+   "domain": "docs.openweather.co.uk",
+   "snippet": "Air Pollution API provides current, forecast and historical air pollution data for any coordinates on the globe."
+  },
+  {
+   "id": 9,
+   "title": "Keep your finger on the pulse of Air Pollution API | by OpenWeather | Medium",
+   "url": "https://openweathermap.medium.com/keep-your-finger-on-the-pulse-of-air-pollution-api-2f2c9ba42de0",
+   "domain": "openweathermap.medium.com",
+   "snippet": "February 11, 2021 - As a weather data provider, OpenWeather seeks to aid businesses in tackling the sustainability challenges. Our free Air Pollution API provides the AQI (Air Quality Index) directly from SILAM \u2014 the atmospheric composition model developed by ..."
+  },
+  {
+   "id": 10,
+   "title": "How to Use OpenWeather API to Enrich Coordinates with Current and Historical Air Pollution Data",
+   "url": "https://www.gigasheet.com/no-code-api/openweather-api",
+   "domain": "gigasheet.com",
+   "snippet": "Provider Website: https://openweathermap.org Provider Enrichment Docs: https://openweathermap.org/api/air-pollution Endpoint: curl http://api.openweathermap.org/data/2.5/air_pollution?lat=40.6943&lon=-73.9249&appid=your-api-key Token / Registration Required: Yes"
+  },
+  {
+   "id": 11,
+   "title": "OpenAQ Homepage",
+   "url": "https://openaq.org/",
+   "domain": "openaq.org",
+   "snippet": "OpenAQ is an environmental tech non-profit providing universal access to air quality data. Join a global community using data to solve air inequality"
+  },
+  {
+   "id": 12,
+   "title": "2025 Year in Data. By Minh Nghiem, OpenAQ Data Fellow",
+   "url": "https://openaq.medium.com/2025-year-in-data-59d62a4f31cd",
+   "domain": "openaq.medium.com",
+   "snippet": "20 Feb 2026 \u00b7 OpenAQ strives to aggregate air quality data from as many countries as we can, with a strategic focus on low- and middle-income countries (LMICs) ..."
+  }
+ ],
+ "queries": [
+  "air quality monitoring Madagascar Antananarivo pollution data",
+  "OpenWeather air pollution API",
+  "IQAir OpenAQ air quality data platform"
+ ],
+ "demo": null
+}

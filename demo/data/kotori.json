@@ -1,0 +1,495 @@
+{
+ "snapshot": {
+  "repo": {
+   "url": "https://github.com/colombefioren/KOTORI",
+   "owner": "colombefioren",
+   "name": "KOTORI",
+   "host": "github.com",
+   "branch": "preprod",
+   "commit": "a39beaaec48b"
+  },
+  "ingested_at": "2026-09-25T11:57:18.456399+00:00",
+  "files": {
+   "tracked": 64,
+   "analyzed": 60,
+   "code_files": 48,
+   "code_loc": 7239,
+   "skipped": 4
+  },
+  "languages": [
+   {
+    "name": "Python",
+    "loc": 4224,
+    "files": 39,
+    "share": 0.554
+   },
+   {
+    "name": "CSS",
+    "loc": 1760,
+    "files": 4,
+    "share": 0.231
+   },
+   {
+    "name": "JavaScript",
+    "loc": 1224,
+    "files": 4,
+    "share": 0.161
+   },
+   {
+    "name": "Markdown",
+    "loc": 173,
+    "files": 2,
+    "share": 0.023
+   },
+   {
+    "name": "YAML",
+    "loc": 146,
+    "files": 3,
+    "share": 0.019
+   },
+   {
+    "name": "TOML",
+    "loc": 63,
+    "files": 1,
+    "share": 0.008
+   },
+   {
+    "name": "Dockerfile",
+    "loc": 31,
+    "files": 1,
+    "share": 0.004
+   }
+  ],
+  "largest_files": [
+   {
+    "path": "src/kotori/assets/styles/components.css",
+    "loc": 944
+   },
+   {
+    "path": "src/kotori/assets/styles/layout.css",
+    "loc": 570
+   },
+   {
+    "path": "src/kotori/ui/markup.py",
+    "loc": 566
+   },
+   {
+    "path": "src/kotori/assets/scripts/shell.js",
+    "loc": 537
+   },
+   {
+    "path": "src/kotori/ui/studio.py",
+    "loc": 297
+   },
+   {
+    "path": "src/kotori/ui/ui.py",
+    "loc": 289
+   },
+   {
+    "path": "src/kotori/assets/scripts/deck.js",
+    "loc": 289
+   },
+   {
+    "path": "src/kotori/assets/scripts/teleprompter.js",
+    "loc": 277
+   }
+  ],
+  "dependencies": {
+   "pip": [
+    "gradio",
+    "gtts",
+    "langchain",
+    "langchain-openai",
+    "python-dotenv",
+    "requests"
+   ]
+  },
+  "stack": {
+   "frameworks": [
+    {
+     "id": "OTHER",
+     "label": "Gradio"
+    }
+   ],
+   "libraries": [
+    "LangChain"
+   ],
+   "primary_type": "OTHER",
+   "frontend_only": false
+  },
+  "signals": {
+   "has_readme": true,
+   "readme_chars": 2863,
+   "readme_sections": 6,
+   "has_tests": true,
+   "test_files": 17,
+   "has_ci": true,
+   "has_docker": true,
+   "has_license": true,
+   "has_env_example": true,
+   "has_linter": false,
+   "has_type_checking": true,
+   "has_gitignore": true,
+   "committed_secrets_risk": [],
+   "hardcoded_secrets": [],
+   "committed_dependencies": false
+  },
+  "history": {
+   "commit_count": 143,
+   "truncated": false,
+   "first_commit_at": "2026-09-16T14:37:06+03:00",
+   "last_commit_at": "2026-09-19T12:08:44+03:00",
+   "contributors": [
+    {
+     "name": "colombefioren",
+     "commits": 143
+    }
+   ],
+   "commits_per_day": {
+    "2026-09-16": 66,
+    "2026-09-17": 66,
+    "2026-09-18": 10,
+    "2026-09-19": 1
+   },
+   "low_quality_messages": 0,
+   "recent_commits": [
+    {
+     "sha": "a39beaaec4",
+     "author": "colombefioren",
+     "date": "2026-09-19T12:08:44+03:00",
+     "subject": "feat: add health endpoint"
+    },
+    {
+     "sha": "17829901c6",
+     "author": "COCO",
+     "date": "2026-09-18T19:26:14+03:00",
+     "subject": "refactor: update readme"
+    },
+    {
+     "sha": "f8a828c78a",
+     "author": "colombefioren",
+     "date": "2026-09-18T19:21:20+03:00",
+     "subject": "docs: capitalize readme section titles and trim the what-it-is section"
+    },
+    {
+     "sha": "9d1f7ce9bd",
+     "author": "colombefioren",
+     "date": "2026-09-18T19:15:27+03:00",
+     "subject": "docs: rewrite the readme around what kotori actually is"
+    },
+    {
+     "sha": "ebed0ce68d",
+     "author": "colombefioren",
+     "date": "2026-09-18T18:46:53+03:00",
+     "subject": "docs: correct the free-deploy advice, HF Docker Spaces isn't free anymore"
+    },
+    {
+     "sha": "a809d3cecb",
+     "author": "colombefioren",
+     "date": "2026-09-18T11:24:11+03:00",
+     "subject": "ci: stop validating a render.yaml that no longer exists"
+    },
+    {
+     "sha": "9a41e22134",
+     "author": "colombefioren",
+     "date": "2026-09-18T11:23:33+03:00",
+     "subject": "docs: drop the Render blueprint, lead with the free Space instead"
+    },
+    {
+     "sha": "9dc8f295ea",
+     "author": "colombefioren",
+     "date": "2026-09-18T11:16:12+03:00",
+     "subject": "revert: drop the ASGI export and README section for Vercel"
+    },
+    {
+     "sha": "0c96759150",
+     "author": "colombefioren",
+     "date": "2026-09-18T11:15:24+03:00",
+     "subject": "revert: remove the Vercel scaffolding, proven a dead end"
+    },
+    {
+     "sha": "b6aac85f0a",
+     "author": "colombefioren",
+     "date": "2026-09-18T10:37:24+03:00",
+     "subject": "fix: Vercel 500 FUNCTION_INVOCATION_FAILED from missing dependencies"
+    },
+    {
+     "sha": "4d95fb037f",
+     "author": "colombefioren",
+     "date": "2026-09-18T10:33:40+03:00",
+     "subject": "feat: page the ledger, and give voice recording a patient wait"
+    },
+    {
+     "sha": "616a227a29",
+     "author": "colombefioren",
+     "date": "2026-09-17T20:55:16+03:00",
+     "subject": "fix: defer langchain imports to cut the Vercel cold start"
+    },
+    {
+     "sha": "5d234c1544",
+     "author": "colombefioren",
+     "date": "2026-09-17T19:41:00+03:00",
+     "subject": "fix: expose the studio as an ASGI app so app.py deploys to Vercel"
+    },
+    {
+     "sha": "a6078f5495",
+     "author": "colombefioren",
+     "date": "2026-09-17T18:42:01+03:00",
+     "subject": "fix: play button invisible after a story finishes"
+    },
+    {
+     "sha": "85d308bd6a",
+     "author": "colombefioren",
+     "date": "2026-09-17T17:42:01+03:00",
+     "subject": "chore: bump version to 0.4.0"
+    }
+   ],
+   "commit_dates": [
+    "2026-09-19T12:08:44+03:00",
+    "2026-09-18T19:26:14+03:00",
+    "2026-09-18T19:21:20+03:00",
+    "2026-09-18T19:15:27+03:00",
+    "2026-09-18T18:46:53+03:00",
+    "2026-09-18T11:24:11+03:00",
+    "2026-09-18T11:23:33+03:00",
+    "2026-09-18T11:16:12+03:00",
+    "2026-09-18T11:15:24+03:00",
+    "2026-09-18T10:37:24+03:00",
+    "2026-09-18T10:33:40+03:00",
+    "2026-09-17T20:55:16+03:00",
+    "2026-09-17T19:41:00+03:00",
+    "2026-09-17T18:42:01+03:00",
+    "2026-09-17T17:42:01+03:00",
+    "2026-09-17T17:36:04+03:00",
+    "2026-09-17T17:35:30+03:00",
+    "2026-09-17T17:26:53+03:00",
+    "2026-09-17T17:26:41+03:00",
+    "2026-09-17T17:05:58+03:00",
+    "2026-09-17T16:47:22+03:00",
+    "2026-09-17T16:20:29+03:00",
+    "2026-09-17T16:20:04+03:00",
+    "2026-09-17T15:54:45+03:00",
+    "2026-09-17T15:52:43+03:00",
+    "2026-09-17T15:52:33+03:00",
+    "2026-09-17T15:52:15+03:00",
+    "2026-09-17T15:12:20+03:00",
+    "2026-09-17T12:18:45+03:00",
+    "2026-09-17T11:40:19+03:00",
+    "2026-09-17T11:38:23+03:00",
+    "2026-09-17T11:36:04+03:00",
+    "2026-09-17T11:36:04+03:00",
+    "2026-09-17T11:34:34+03:00",
+    "2026-09-17T11:34:34+03:00",
+    "2026-09-17T11:32:41+03:00",
+    "2026-09-17T11:32:41+03:00",
+    "2026-09-17T11:29:51+03:00",
+    "2026-09-17T11:29:51+03:00",
+    "2026-09-17T11:29:51+03:00",
+    "2026-09-17T11:26:44+03:00",
+    "2026-09-17T11:26:44+03:00",
+    "2026-09-17T11:24:21+03:00",
+    "2026-09-17T11:23:45+03:00",
+    "2026-09-17T11:23:45+03:00",
+    "2026-09-17T11:22:10+03:00",
+    "2026-09-17T11:20:37+03:00",
+    "2026-09-17T11:19:33+03:00",
+    "2026-09-17T11:17:49+03:00",
+    "2026-09-17T11:10:18+03:00",
+    "2026-09-17T11:10:18+03:00",
+    "2026-09-17T11:10:18+03:00",
+    "2026-09-17T11:10:18+03:00",
+    "2026-09-17T11:10:18+03:00",
+    "2026-09-17T11:10:09+03:00",
+    "2026-09-17T11:10:09+03:00",
+    "2026-09-17T11:10:09+03:00",
+    "2026-09-17T11:10:09+03:00",
+    "2026-09-17T11:10:09+03:00",
+    "2026-09-17T11:01:33+03:00",
+    "2026-09-17T10:53:00+03:00",
+    "2026-09-17T10:53:00+03:00",
+    "2026-09-17T10:36:03+03:00",
+    "2026-09-17T10:35:12+03:00",
+    "2026-09-17T10:35:12+03:00",
+    "2026-09-17T10:35:12+03:00",
+    "2026-09-17T10:35:12+03:00",
+    "2026-09-17T10:35:12+03:00",
+    "2026-09-17T10:35:12+03:00",
+    "2026-09-17T10:35:12+03:00",
+    "2026-09-17T10:35:12+03:00",
+    "2026-09-17T10:35:12+03:00",
+    "2026-09-17T10:35:12+03:00",
+    "2026-09-17T10:35:12+03:00",
+    "2026-09-17T10:35:12+03:00",
+    "2026-09-17T10:35:12+03:00",
+    "2026-09-17T10:35:12+03:00",
+    "2026-09-16T16:48:20+03:00",
+    "2026-09-16T16:40:38+03:00",
+    "2026-09-16T16:40:08+03:00",
+    "2026-09-16T16:39:42+03:00",
+    "2026-09-16T16:39:42+03:00",
+    "2026-09-16T16:35:52+03:00",
+    "2026-09-16T16:24:20+03:00",
+    "2026-09-16T16:22:39+03:00",
+    "2026-09-16T16:21:21+03:00",
+    "2026-09-16T16:21:21+03:00",
+    "2026-09-16T16:19:44+03:00",
+    "2026-09-16T16:18:19+03:00",
+    "2026-09-16T16:18:19+03:00",
+    "2026-09-16T16:15:49+03:00",
+    "2026-09-16T16:15:49+03:00",
+    "2026-09-16T16:15:30+03:00",
+    "2026-09-16T16:15:19+03:00",
+    "2026-09-16T16:15:07+03:00",
+    "2026-09-16T16:14:52+03:00",
+    "2026-09-16T16:14:43+03:00",
+    "2026-09-16T16:14:27+03:00",
+    "2026-09-16T16:09:44+03:00",
+    "2026-09-16T16:08:04+03:00",
+    "2026-09-16T16:07:01+03:00",
+    "2026-09-16T16:06:41+03:00",
+    "2026-09-16T16:06:17+03:00",
+    "2026-09-16T16:05:17+03:00",
+    "2026-09-16T16:04:35+03:00",
+    "2026-09-16T16:04:27+03:00",
+    "2026-09-16T16:04:10+03:00",
+    "2026-09-16T16:02:35+03:00",
+    "2026-09-16T16:01:46+03:00",
+    "2026-09-16T16:01:07+03:00",
+    "2026-09-16T16:00:36+03:00",
+    "2026-09-16T16:00:23+03:00",
+    "2026-09-16T16:00:04+03:00",
+    "2026-09-16T15:59:53+03:00",
+    "2026-09-16T15:59:33+03:00",
+    "2026-09-16T15:59:07+03:00",
+    "2026-09-16T15:58:39+03:00",
+    "2026-09-16T15:58:13+03:00",
+    "2026-09-16T15:58:03+03:00",
+    "2026-09-16T15:57:51+03:00",
+    "2026-09-16T15:57:34+03:00",
+    "2026-09-16T15:57:22+03:00",
+    "2026-09-16T15:57:00+03:00",
+    "2026-09-16T15:56:46+03:00",
+    "2026-09-16T15:56:28+03:00",
+    "2026-09-16T15:56:03+03:00",
+    "2026-09-16T15:55:47+03:00",
+    "2026-09-16T15:55:25+03:00",
+    "2026-09-16T15:55:13+03:00",
+    "2026-09-16T15:55:00+03:00",
+    "2026-09-16T15:54:48+03:00",
+    "2026-09-16T15:54:37+03:00",
+    "2026-09-16T15:54:26+03:00",
+    "2026-09-16T15:54:17+03:00",
+    "2026-09-16T15:54:03+03:00",
+    "2026-09-16T15:53:52+03:00",
+    "2026-09-16T15:53:42+03:00",
+    "2026-09-16T15:53:36+03:00",
+    "2026-09-16T15:53:36+03:00",
+    "2026-09-16T15:53:29+03:00",
+    "2026-09-16T14:41:01+03:00",
+    "2026-09-16T14:38:57+03:00",
+    "2026-09-16T14:37:06+03:00"
+   ]
+  },
+  "tree": ".dockerignore\n.env.example\n.gitignore\n.python-version\nDockerfile\nLICENSE\nREADME.md\napp.py\ndocker-compose.yml\npyproject.toml\n.github/ (2 files)\n.github/workflows/ (2 files)\ndocs/ (2 files)\nscripts/ (1 files)\nsrc/ (28 files)\nsrc/kotori/ (28 files)\nsrc/kotori/assets/ (8 files)\nsrc/kotori/core/ (9 files)\nsrc/kotori/ui/ (7 files)\ntests/ (17 files)",
+  "readme": "<div align=\"center\">\n\n<img src=\"src/kotori/assets/images/kotori-mark.png\" alt=\"kotori: a bird carrying a star\" width=\"160\" />\n\n# KOTORI\n\n**a pastel paper studio that writes you a story and reads it aloud.**\n\n![python](https://img.shields.io/badge/python-3.12%2B-3776AB?style=for-the-badge&logo=python&logoColor=white)\n![gradio](https://img.shields.io/badge/gradio-6-FF7C00?style=for-the-badge&logo=gradio&logoColor=white)\n![langchain](https://img.shields.io/badge/langchain-1.4-1C3C3C?style=for-the-badge&logo=langchain&logoColor=white)\n![docker](https://img.shields.io/badge/docker-ready-2496ED?style=for-the-badge&logo=docker&logoColor=white)\n![uv](https://img.shields.io/badge/uv-managed-DE5FE9?style=for-the-badge&logo=uv&logoColor=white)\n![tests](https://img.shields.io/badge/tests-199%20passing-2EA44F?style=for-the-badge&logo=pytest&logoColor=white)\n![licence](https://img.shields.io/badge/licence-MIT-6f6573?style=for-the-badge)\n\n</div>\n\n---\n\n## What KOTORI is\n\ngive it one line, a place, a person, a problem, and kotori writes a full story around\nit: four hundred words, typed onto the page one word at a time. a voice then reads it\nback, and every word lights up on the page in time with the voice, like a karaoke\nlyric you can pause, skip, or scrub.\n\nno signup or key required: the studio ships demo reels, so writing, streaming and\nnarration all work immediately. add a model endpoint later and the same button writes\nsomething new, in any of ten genres and eight moods, read by one of twelve voices\nacross nine languages.\n\nthe interface looks like a scrapbook left open on a desk, not a software dashboard:\ntorn paper, washi tape, index cards, a polaroid, and margin doodles, where pink marks\nwhat you gave it and blue marks what it wrote back. kotori is the japanese word for a\nsmall bird, the one taped above, carrying a star.\n\nevery story you keep is filed away with its own recording, ready to reopen, replay, or\nexport as text or mp3.\n\n## Quickstart\n\n```bash\ngit clone https://github.com/colombefioren/kotori && cd kotori\nuv sync            # installs the studio and its dev tools\nuv run kotori      # \u2192 http://127.0.0.1:7860\n```\n\nno key? press **write the story** anyway. the studio ships demo reels, so the whole\nexperience works before you ever open `.env`. add credentials whenever you like:\n\n```ini\n# .env \u2014 any OpenAI-compatible endpoint\nMODEL_NAME=your-model\nAPI_KEY=sk-\u2026\nBASE_URL=https://api.your-endpoint.com/v1\n```\n\n## The three rooms\n\n| tab | what lives there |\n|:--|:--|",
+  "indexed_chunks": 0
+ },
+ "sources": [
+  {
+   "id": 1,
+   "title": "AI Children's Book Generator & Storybook Creator | ReadKidz",
+   "url": "https://www.readkidz.com/",
+   "domain": "readkidz.com",
+   "snippet": "Turn one sentence into a complete illustrated children's book \u2014 pick an age and story type, and read your picture book in minutes. Wrote a story?"
+  },
+  {
+   "id": 2,
+   "title": "KidsStoryteller.ai \u2014 Kids Story Video & Voice Generator for ...",
+   "url": "https://kidsstoryteller.ai/",
+   "domain": "kidsstoryteller.ai",
+   "snippet": "KidsStoryteller.ai turns kids' story scripts into narrated audio with 30+ voices, including real child voices. generating your own narration starts at $4/month ..."
+  },
+  {
+   "id": 3,
+   "title": "Read Aloud Story - Evernote",
+   "url": "https://evernote.com/ai-text-to-voice/read-aloud-story",
+   "domain": "evernote.com",
+   "snippet": "Rating 4.4 (83,300) The read aloud feature converts text into natural audio files. Users can type or upload text, select a voice, and generate audio for storytelling."
+  },
+  {
+   "id": 4,
+   "title": "Gemini Storybook \u2014 for the stories only you could imagine",
+   "url": "https://gemini.google/overview/storybook/",
+   "domain": "gemini.google",
+   "snippet": "Create personalized, illustrated stories with Gemini Storybook. Describe the story you want, and get a unique 10-page book with read-aloud narration."
+  },
+  {
+   "id": 5,
+   "title": "Storytime AI: Story Generator - App Store - Apple",
+   "url": "https://apps.apple.com/us/app/storytime-ai-story-generator/id6449826316",
+   "domain": "apps.apple.com",
+   "snippet": "Storytime AI \u2013 now with enhanced read-along video capabilities, perfect for kids and children! Read books on your own, or use our read-to-me narration."
+  },
+  {
+   "id": 6,
+   "title": "12 Best Bedtime Story & Storytelling Apps for Kids (2026)",
+   "url": "https://www.bedtime-stories.fun/blog/best-bedtime-story-apps",
+   "domain": "bedtime-stories.fun",
+   "snippet": "August 8, 2026 - For a detailed comparison of all AI generators including Perchance, Sleepytale, Scarlett Panda, and Talefy, see our full AI generator comparison. A distinct group of apps makes your child the hero and lets you narrate in your own voice."
+  },
+  {
+   "id": 7,
+   "title": "Sleepytale vs Competitors",
+   "url": "https://www.sleepytale.com/compare",
+   "domain": "sleepytale.com",
+   "snippet": "Most bedtime story apps give you a fixed library of stories and call it a day. Sleepytale is different because every story is generated fresh using AI, personalized to your child's name, interests, and the lessons you want to reinforce. That means no repeats, no boredom, and no generic characters your kid cannot relate to. We also offer audio narration, original lullabies, and musical stories that"
+  },
+  {
+   "id": 8,
+   "title": "Best AI Bedtime Story Generators for Kids in 2026 (We Tested 8) | Bedtime Stories",
+   "url": "https://www.bedtime-stories.fun/blog/best-ai-bedtime-story-generators",
+   "domain": "bedtime-stories.fun",
+   "snippet": "April 2, 2026 - A deployed parent, a traveling professional, or a grandparent living across the country can clone their voice and have it narrate a new story every night. The child hears a familiar voice. The parent doesn't have to record anything in real time. This makes it particularly powerful for long-distance families. The \"Avery\" AI narrator is soothing and well-designed for bedtime. The app"
+  },
+  {
+   "id": 9,
+   "title": "Bedtime Stories \ud83c\udf1c Competitors & Alternatives (2026) | Product Hunt",
+   "url": "https://www.producthunt.com/products/bedtime-stories/alternatives",
+   "domain": "producthunt.com",
+   "snippet": "July 15, 2026 - Explore Bedtime Stories alternatives like Storytime AI, Fable Wizard, and Mowgly to find personalized, kid-friendly tales with images and narration."
+  },
+  {
+   "id": 10,
+   "title": "Best Bedtime Story Apps for Kids in 2026 | Fablino Blog",
+   "url": "https://fablino.ai/blog/best-bedtime-story-apps-for-kids-in-2026",
+   "domain": "fablino.ai",
+   "snippet": "April 9, 2026 - Storybird uses AI to help kids (and parents) write and illustrate their own stories. It's more of a creative tool than a bedtime solution. ... Best for: Creative daytime activity. Not designed for bedtime audio listening. ... Amazon's Audible has a massive children's audiobook library with professional narrators."
+  },
+  {
+   "id": 11,
+   "title": "Decoding AI Story Generator Tool\u2019s Market Size Potential by 2033",
+   "url": "https://www.marketreportanalytics.com/reports/ai-story-generator-tool-54811",
+   "domain": "marketreportanalytics.com",
+   "snippet": "April 3, 2025 - The market, estimated at $1.5 billion in 2025, is projected to exhibit a robust Compound Annual Growth Rate (CAGR) of 25% from 2025 to 2033, reaching approximately $7.5 billion by 2033."
+  },
+  {
+   "id": 12,
+   "title": "AI-Generated Storytelling Market Research Report 2033",
+   "url": "https://dataintelo.com/report/ai-generated-storytelling-market",
+   "domain": "dataintelo.com",
+   "snippet": "June 28, 2025 - According to our latest research, the global AI-Generated Storytelling market size reached USD 1.84 billion in 2024, driven by rapid advancements in natural language processing and the increasing integration of artificial intelligence in creative ..."
+  }
+ ],
+ "queries": [
+  "AI story generator read aloud app for kids",
+  "AI bedtime story app narration competitors",
+  "AI storytelling market size growth"
+ ],
+ "demo": {
+  "url": "https://kotori-z3i4.onrender.com",
+  "final_url": "https://kotori-z3i4.onrender.com",
+  "reachable": true,
+  "status_code": 200,
+  "title": null
+ }
+}

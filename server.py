@@ -9,6 +9,7 @@ from fastapi.responses import JSONResponse
 
 from config import settings
 from db import close_pool, init_db, ping
+from demo.seed import seed_demo
 from pipeline.queue import Worker
 from routes.agents import router as agents_router
 from routes.hackathons import router as hackathons_router
@@ -26,6 +27,7 @@ for noisy in ("httpx", "ddgs", "primp", "chromadb"):
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     init_db()
+    seed_demo()
     worker = None
     if settings.run_worker:
         worker = Worker()
