@@ -1,45 +1,21 @@
-# Core Web Framework
-fastapi>=0.110.0
-uvicorn>=0.27.1
-starlette>=0.36.0
+# Web framework
+fastapi>=0.115.0
+uvicorn[standard]>=0.30.0
 
 # Database
 psycopg2-binary>=2.9.9
 
-# LangChain Core
-langchain>=0.1.14
-langchain-core>=0.1.0
-langchain-community>=0.0.38
-langchain-openai>=0.1.0
-langchain-huggingface>=0.1.0
-langchain-chroma>=0.1.0
-langchain-text-splitters>=0.0.1
+# LLM (any OpenAI-compatible endpoint)
+openai>=1.40.0
+tenacity>=8.2.3
+pydantic>=2.6.0,<3
 
-# AI/ML
-openai>=1.14.0
-chromadb>=0.4.24
-sentence-transformers>=2.2.2
-huggingface-hub>=0.20.0
-torch>=2.0.0
-transformers>=4.36.0
+# Code index & semantic search (bundled ONNX MiniLM embeddings, no torch needed)
+chromadb>=0.5.0
 
-# Git Integration
-gitpython>=3.1.40
-gitingest>=0.3.0
-
-# Web Search
-ddgs>=1.0.0
+# Market research
+ddgs>=9.0.0
+httpx>=0.27.0
 
 # Utilities
 python-dotenv>=1.0.0
-requests>=2.31.0
-numpy>=1.26.3,<2
-pydantic>=2.6.0,<3
-pandas>=2.1.4
-tiktoken>=0.5.2
-httpx>=0.27.0
-tenacity>=8.2.3
-pyyaml>=6.0.1
-
-# CORS
-aiohttp>=3.9.5
