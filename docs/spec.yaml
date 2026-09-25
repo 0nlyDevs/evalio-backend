@@ -1,507 +1,749 @@
-openapi: 3.0.3
+openapi: 3.1.0
 info:
-  title: Hackathon API
-  description: |
-    API for hackathon project management and AI-powered evaluation.
-    Features:
-    - Project submission with automatic code & market analysis
-    - LLM-based scoring with explanations
-    - Hackathon management with custom criteria
-  version: 1.0.0
-  contact:
-    name: Hackathon API Support
-    url: https://github.com/your-repo/hackathon-backend
-
-servers:
-  - url: http://localhost:8000
-    description: Local development server
-  - url: https://api.yourdomain.com
-    description: Production server
-
-tags:
-  - name: Hackathons
-    description: Hackathon management endpoints
-  - name: Projects
-    description: Project submission and retrieval
-  - name: Scoring
-    description: LLM-powered project scoring
-  - name: Market Agent
-    description: Market analysis with web research
-  - name: Code Agent
-    description: Code analysis via GitHub API
-  - name: Chat Agent
-    description: Chat functionality
-
+  title: Evalio API
+  description: 'AI hackathon jury: a Code Judge, a Market Judge and a Product Judge
+    evaluate every submission against the hackathon''s weighted criteria; a Head Judge
+    ranks them.'
+  version: 2.0.0
 paths:
   /api/create-hackathon:
     post:
-      tags: [Hackathons]
-      summary: Create a new hackathon
-      description: Creates a hackathon with optional evaluation criteria
+      tags:
+      - Hackathons
+      summary: Create a hackathon with weighted judging criteria
+      operationId: create_hackathon_api_create_hackathon_post
       requestBody:
-        required: true
         content:
           application/json:
             schema:
               $ref: '#/components/schemas/HackathonCreate'
-            examples:
-              default:
-                summary: AI Hackathon
-                value:
-                  name: "AI Hackathon 2026"
-                  description: "Build innovative AI solutions"
-                  theme: "Artificial Intelligence"
-                  isAllowed: true
-                  criteria: "Code Quality, Innovation, Tech Stack"
-                  deadline: "2026-12-31T23:59:59Z"
+        required: true
       responses:
         '200':
-          description: Hackathon created successfully
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
           content:
             application/json:
               schema:
-                type: object
-                properties:
-                  message:
-                    type: string
-                    example: "Hackathon created"
-                  hackathon_id:
-                    type: integer
-                    example: 1
-
-  /api/get-hackathon/{hackathon_id}:
-    get:
-      tags: [Hackathons]
-      summary: Get hackathon details
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/update-hackathon/{hackathon_id}:
+    patch:
+      tags:
+      - Hackathons
+      summary: Update a hackathon (e.g. open/close submissions)
+      operationId: update_hackathon_api_update_hackathon__hackathon_id__patch
       parameters:
-        - name: hackathon_id
-          in: path
-          required: true
-          schema:
-            type: integer
-      responses:
-        '200':
-          description: Hackathon details
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Hackathon'
-
-  /api/get-all-hackathons:
-    get:
-      tags: [Hackathons]
-      summary: List all hackathons
-      responses:
-        '200':
-          description: List of hackathons
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  message:
-                    type: string
-                    example: "successful"
-                  hackathons:
-                    type: array
-                    items:
-                      $ref: '#/components/schemas/Hackathon'
-
-  /api/create-project:
-    post:
-      tags: [Projects]
-      summary: Create project and trigger AI analysis
-      description: |
-        Submits a project to a hackathon and triggers automatic code & market analysis.
-        Returns immediately; analysis runs asynchronously.
+      - name: hackathon_id
+        in: path
+        required: true
+        schema:
+          type: integer
+          title: Hackathon Id
       requestBody:
         required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/HackathonUpdate'
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/get-hackathon/{hackathon_id}:
+    get:
+      tags:
+      - Hackathons
+      summary: Hackathon details with submission stats
+      operationId: get_hackathon_api_get_hackathon__hackathon_id__get
+      parameters:
+      - name: hackathon_id
+        in: path
+        required: true
+        schema:
+          type: integer
+          title: Hackathon Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/get-all-hackathons:
+    get:
+      tags:
+      - Hackathons
+      summary: List hackathons, newest first
+      operationId: get_all_hackathons_api_get_all_hackathons_get
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+  /api/get-hackathon-leaderboard/{hackathon_id}:
+    get:
+      tags:
+      - Hackathons
+      - Scoring
+      summary: Ranked projects of a hackathon
+      operationId: get_hackathon_leaderboard_api_get_hackathon_leaderboard__hackathon_id__get
+      parameters:
+      - name: hackathon_id
+        in: path
+        required: true
+        schema:
+          type: integer
+          title: Hackathon Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/create-project:
+    post:
+      tags:
+      - Projects
+      summary: Submit a project; the jury evaluates it in the background
+      operationId: create_project_api_create_project_post
+      requestBody:
         content:
           application/json:
             schema:
               $ref: '#/components/schemas/ProjectCreate'
-            examples:
-              withDemoLink:
-                summary: Project with demo link
-                value:
-                  shortDescription: "AI-Powered Code Reviewer"
-                  longDescription: "Automated code review tool using LLMs"
-                  githubLink: "https://github.com/user/repo"
-                  demoLink: "https://myapp.demo.com"
-                  theme: "AI Tools"
-                  hackathonId: 1
+        required: true
       responses:
         '200':
-          description: Project created, analysis running
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
           content:
             application/json:
               schema:
-                type: object
-                properties:
-                  message:
-                    type: string
-                    example: "Project created"
-                  project_id:
-                    type: string
-                    format: uuid
-                    example: "550e8400-e29b-41d4-a716-446655440000"
-
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/reevaluate/{project_id}:
+    post:
+      tags:
+      - Projects
+      summary: Run the whole jury again on a project
+      operationId: reevaluate_api_reevaluate__project_id__post
+      parameters:
+      - name: project_id
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Project Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
   /api/get-project/{project_id}:
     get:
-      tags: [Projects]
-      summary: Get project with analyses and score
+      tags:
+      - Projects
+      summary: 'Full project report: verdict, judges, repo snapshot'
+      operationId: get_project_api_get_project__project_id__get
       parameters:
-        - name: project_id
-          in: path
-          required: true
-          schema:
-            type: string
+      - name: project_id
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Project Id
       responses:
         '200':
-          description: Project details with AI analyses
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Project'
-
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/delete-project/{project_id}:
+    delete:
+      tags:
+      - Projects
+      summary: Delete a submission and its indexes
+      operationId: delete_project_api_delete_project__project_id__delete
+      parameters:
+      - name: project_id
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Project Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
   /api/get-hackathon-projects/{hackathon_id}:
     get:
-      tags: [Projects]
-      summary: List projects in a hackathon
+      tags:
+      - Projects
+      summary: Projects of a hackathon, newest first
+      operationId: get_hackathon_projects_api_get_hackathon_projects__hackathon_id__get
       parameters:
-        - name: hackathon_id
-          in: path
-          required: true
-          schema:
-            type: integer
+      - name: hackathon_id
+        in: path
+        required: true
+        schema:
+          type: integer
+          title: Hackathon Id
       responses:
         '200':
-          description: List of projects in hackathon
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
           content:
             application/json:
               schema:
-                type: object
-                properties:
-                  message:
-                    type: string
-                    example: "successful"
-                  projects:
-                    type: array
-                    items:
-                      $ref: '#/components/schemas/Project'
-
+                $ref: '#/components/schemas/HTTPValidationError'
   /api/get-all:
     get:
-      tags: [Projects]
-      summary: List all projects
+      tags:
+      - Projects
+      summary: All projects, newest first
+      operationId: get_all_projects_api_get_all_get
       responses:
         '200':
-          description: List of all projects
+          description: Successful Response
           content:
             application/json:
-              schema:
-                type: object
-                properties:
-                  message:
-                    type: string
-                    example: "successful"
-                  projects:
-                    type: array
-                    items:
-                      $ref: '#/components/schemas/Project'
-
+              schema: {}
   /api/get-project-score/{project_id}:
     get:
-      tags: [Scoring]
-      summary: Get LLM-generated project score
-      description: |
-        Returns overall score (0-10) with explanation.
-        Score is based on: theme alignment, code quality, market analysis, and hackathon criteria.
+      tags:
+      - Projects
+      - Scoring
+      summary: Final score and explanation
+      operationId: get_project_score_api_get_project_score__project_id__get
       parameters:
-        - name: project_id
-          in: path
-          required: true
-          schema:
-            type: string
-      responses:
-        '200':
-          description: Project score with explanation
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ProjectScore'
-
-  /api/get-hackathon-leaderboard/{hackathon_id}:
-    get:
-      tags: [Scoring]
-      summary: Get hackathon leaderboard
-      parameters:
-        - name: hackathon_id
-          in: path
-          required: true
-          schema:
-            type: integer
-      responses:
-        '200':
-          description: Ranked projects by score
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  message:
-                    type: string
-                    example: "successful"
-                  hackathon_name:
-                    type: string
-                  leaderboard:
-                    type: array
-                    items:
-                      $ref: '#/components/schemas/LeaderboardEntry'
-
-  /api/search:
-    post:
-      tags: [Projects]
-      summary: Semantic search projects
-      requestBody:
+      - name: project_id
+        in: path
         required: true
-        content:
-          application/json:
-            schema:
-              type: object
-              properties:
-                query:
-                  type: string
-                  example: "AI code review"
+        schema:
+          type: string
+          title: Project Id
       responses:
         '200':
-          description: Matching projects
-
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
   /api/review:
     post:
-      tags: [Projects]
-      summary: Mark project as reviewed
+      tags:
+      - Projects
+      summary: Mark a project as reviewed by a human judge
+      operationId: review_project_api_review_post
       requestBody:
-        required: true
         content:
           application/json:
             schema:
-              type: object
-              properties:
-                project_id:
-                  type: string
-                isReviewed:
-                  type: boolean
+              $ref: '#/components/schemas/ReviewIn'
+        required: true
       responses:
         '200':
-          description: Review status updated
-
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/search:
+    post:
+      tags:
+      - Projects
+      - Search
+      summary: Semantic search across submissions
+      operationId: search_projects_api_search_post
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SearchIn'
+        required: true
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/chat-agent:
+    post:
+      tags:
+      - Chat Agent
+      summary: Ask the jury about a project
+      operationId: chat_api_chat_agent_post
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ChatIn'
+        required: true
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/chat-agent/simple:
+    post:
+      tags:
+      - Chat Agent
+      summary: General judging assistant (no project)
+      operationId: simple_chat_api_chat_agent_simple_post
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ChatIn'
+        required: true
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
   /api/code-agent/analyze:
     post:
-      tags: [Code Agent]
-      summary: Analyze a GitHub repository
+      tags:
+      - Code Agent
+      summary: Ingest a repository and return its snapshot
+      operationId: code_agent_analyze_api_code_agent_analyze_post
       requestBody:
-        required: true
         content:
           application/json:
             schema:
-              type: object
-              properties:
-                repo_url:
-                  type: string
-                  example: "https://github.com/user/repo"
+              $ref: '#/components/schemas/RepoIn'
+        required: true
       responses:
         '200':
-          description: Code analysis results
-
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
   /api/market-agent/analyze:
     post:
-      tags: [Market Agent]
-      summary: Analyze market potential
+      tags:
+      - Market Agent
+      summary: Run the Market Judge on an idea
+      operationId: market_agent_analyze_api_market_agent_analyze_post
       requestBody:
-        required: true
         content:
           application/json:
             schema:
-              type: object
-              properties:
-                idea:
-                  type: string
-                theme:
-                  type: string
+              $ref: '#/components/schemas/IdeaIn'
+        required: true
       responses:
         '200':
-          description: Market analysis results
-
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /health:
+    get:
+      summary: Health
+      operationId: health_health_get
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
 components:
   schemas:
-    HackathonCreate:
+    ChatIn:
+      properties:
+        question:
+          type: string
+          maxLength: 2000
+          minLength: 1
+          title: Question
+        project_id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Project Id
+        chathistory:
+          items:
+            $ref: '#/components/schemas/ChatTurn'
+          type: array
+          title: Chathistory
       type: object
-      required: [name]
+      required:
+      - question
+      title: ChatIn
+    ChatTurn:
+      properties:
+        input:
+          type: string
+          title: Input
+          default: ''
+        output:
+          type: string
+          title: Output
+          default: ''
+      type: object
+      title: ChatTurn
+    CriterionIn:
       properties:
         name:
           type: string
-          example: "AI Hackathon 2026"
+          maxLength: 80
+          minLength: 1
+          title: Name
+        weight:
+          type: number
+          maximum: 100.0
+          minimum: 0.0
+          title: Weight
+          default: 1
+        judge:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Judge
+        description:
+          anyOf:
+          - type: string
+            maxLength: 300
+          - type: 'null'
+          title: Description
+      type: object
+      required:
+      - name
+      title: CriterionIn
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+          title: Detail
+      type: object
+      title: HTTPValidationError
+    HackathonCreate:
+      properties:
+        name:
+          type: string
+          maxLength: 120
+          minLength: 3
+          title: Name
         description:
           type: string
-          example: "Build innovative AI solutions"
+          maxLength: 4000
+          title: Description
+          default: ''
         theme:
           type: string
-          example: "Artificial Intelligence"
+          maxLength: 1000
+          title: Theme
+          default: ''
+        technologies:
+          type: string
+          maxLength: 1000
+          title: Technologies
+          default: ''
+        criteria:
+          anyOf:
+          - type: string
+          - items:
+              $ref: '#/components/schemas/CriterionIn'
+            type: array
+          - type: 'null'
+          title: Criteria
+        startsAt:
+          anyOf:
+          - type: string
+            format: date-time
+          - type: 'null'
+          title: Startsat
+        deadline:
+          anyOf:
+          - type: string
+            format: date-time
+          - type: 'null'
+          title: Deadline
         isAllowed:
           type: boolean
-          default: false
-        criteria:
-          type: string
-          description: "Comma-separated criteria (e.g., 'Code Quality, Innovation, Tech Stack')"
-          example: "Code Quality, Innovation, Tech Stack, Market Potential"
-        deadline:
-          type: string
-          format: date-time
-
-    Hackathon:
+          title: Isallowed
+          default: true
       type: object
+      required:
+      - name
+      title: HackathonCreate
+    HackathonUpdate:
       properties:
-        _id:
+        name:
+          anyOf:
+          - type: string
+            maxLength: 120
+            minLength: 3
+          - type: 'null'
+          title: Name
+        description:
+          anyOf:
+          - type: string
+            maxLength: 4000
+          - type: 'null'
+          title: Description
+        theme:
+          anyOf:
+          - type: string
+            maxLength: 1000
+          - type: 'null'
+          title: Theme
+        technologies:
+          anyOf:
+          - type: string
+            maxLength: 1000
+          - type: 'null'
+          title: Technologies
+        criteria:
+          anyOf:
+          - type: string
+          - items:
+              $ref: '#/components/schemas/CriterionIn'
+            type: array
+          - type: 'null'
+          title: Criteria
+        startsAt:
+          anyOf:
+          - type: string
+            format: date-time
+          - type: 'null'
+          title: Startsat
+        deadline:
+          anyOf:
+          - type: string
+            format: date-time
+          - type: 'null'
+          title: Deadline
+        isAllowed:
+          anyOf:
+          - type: boolean
+          - type: 'null'
+          title: Isallowed
+      type: object
+      title: HackathonUpdate
+    IdeaIn:
+      properties:
+        idea:
           type: string
-          description: "Hackathon ID as string"
+          maxLength: 4000
+          minLength: 10
+          title: Idea
+        theme:
+          type: string
+          title: Theme
+          default: ''
+      type: object
+      required:
+      - idea
+      title: IdeaIn
+    ProjectCreate:
+      properties:
         name:
           type: string
-        description:
-          type: string
-        theme:
-          type: string
-        is_allowed:
-          type: boolean
-        criteria:
-          type: string
-        deadline:
-          type: string
-          format: date-time
-        created_at:
-          type: string
-          format: date-time
-
-    ProjectCreate:
-      type: object
-      required: [shortDescription]
-      properties:
+          maxLength: 80
+          title: Name
+          default: ''
         shortDescription:
           type: string
-          example: "AI-Powered Code Reviewer"
+          maxLength: 160
+          minLength: 5
+          title: Shortdescription
         longDescription:
           type: string
-          example: "Automated code review tool using LLMs"
+          maxLength: 6000
+          title: Longdescription
+          default: ''
         githubLink:
           type: string
-          format: uri
-          example: "https://github.com/user/repo"
+          maxLength: 300
+          title: Githublink
         demoLink:
-          type: string
-          format: uri
-          nullable: true
-          example: "https://myapp.demo.com"
+          anyOf:
+          - type: string
+            maxLength: 300
+          - type: 'null'
+          title: Demolink
         theme:
           type: string
-          example: "AI Tools"
+          maxLength: 300
+          title: Theme
+          default: ''
         hackathonId:
-          type: integer
-          nullable: true
-
-    Project:
-      type: object
-      properties:
-        _id:
+          anyOf:
+          - type: integer
+          - type: 'null'
+          title: Hackathonid
+        projectType:
           type: string
+          title: Projecttype
+          default: OTHER
+      type: object
+      required:
+      - shortDescription
+      - githubLink
+      title: ProjectCreate
+    RepoIn:
+      properties:
+        repo_url:
+          type: string
+          maxLength: 300
+          minLength: 5
+          title: Repo Url
+      type: object
+      required:
+      - repo_url
+      title: RepoIn
+    ReviewIn:
+      properties:
         project_id:
           type: string
-          format: uuid
-        hackathon_id:
-          type: integer
-          nullable: true
-        short_description:
-          type: string
-        long_description:
-          type: string
-        github_link:
-          type: string
-          format: uri
-        demo_link:
-          type: string
-          format: uri
-          nullable: true
-        theme:
-          type: string
-        is_reviewed:
+          title: Project Id
+        isReviewed:
           type: boolean
-        code_agent_analysis:
-          type: array
-          items:
-            type: object
-        market_agent_analysis:
-          type: array
-          items:
-            type: object
-        overall_score:
-          type: number
-          format: decimal
-          nullable: true
-          description: "Score from 0-1 (convert to 0-10 by multiplying by 10)"
-        score_explanation:
-          type: string
-          description: "Bullet-point explanations for the score"
-        created_at:
-          type: string
-          format: date-time
-
-    ProjectScore:
+          title: Isreviewed
       type: object
+      required:
+      - project_id
+      - isReviewed
+      title: ReviewIn
+    SearchIn:
       properties:
-        message:
+        query:
           type: string
-          example: "successful"
-        project_id:
+          maxLength: 300
+          minLength: 1
+          title: Query
+        hackathonId:
+          anyOf:
+          - type: integer
+          - type: 'null'
+          title: Hackathonid
+      type: object
+      required:
+      - query
+      title: SearchIn
+    ValidationError:
+      properties:
+        loc:
+          items:
+            anyOf:
+            - type: string
+            - type: integer
+          type: array
+          title: Location
+        msg:
           type: string
-        hackathon_name:
+          title: Message
+        type:
           type: string
-          nullable: true
-        overall_score:
-          type: number
-          description: "Score from 0-10"
-        score_explanation:
-          type: string
-          description: "Bullet-point reasons for the score"
-        score_breakdown:
+          title: Error Type
+        input:
+          title: Input
+        ctx:
           type: object
-          properties:
-            raw_score:
-              type: number
-              description: "Original score (0-1 scale)"
-            out_of_10:
-              type: number
-              description: "Converted score (0-10 scale)"
-
-    LeaderboardEntry:
+          title: Context
       type: object
-      properties:
-        project_id:
-          type: string
-        short_description:
-          type: string
-        github_link:
-          type: string
-          format: uri
-        score:
-          type: number
-          description: "Score from 0-10"
-        score_explanation:
-          type: string
-
-  securitySchemes:
-    ApiKeyAuth:
-      type: apiKey
-      in: header
-      name: X-API-Key
-
-security:
-  - ApiKeyAuth: []
+      required:
+      - loc
+      - msg
+      - type
+      title: ValidationError
+servers:
+- url: http://localhost:8000
+  description: Local
