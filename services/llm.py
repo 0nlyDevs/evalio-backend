@@ -56,12 +56,45 @@ def provider_host() -> str:
     return (urlparse(settings.llm_base_url).hostname or "").lower()
 
 
+# Fallbacks discovered from the provider's catalog when none are configured
+_auto_fallbacks: list[str] = []
+
+
 def model_chain() -> list[str]:
-    """Main model followed by fallbacks, without duplicates."""
-    fallbacks = list(settings.llm_fallback_models)
+    """Main model followed by fallbacks, without duplicates.
+
+    Priority: LLM_FALLBACK_MODELS, then free models discovered from the
+    provider's catalog at startup, then OpenRouter's free router."""
+    fallbacks = list(settings.llm_fallback_models) or list(_auto_fallbacks)
     if not fallbacks and provider_host().endswith("openrouter.ai"):
         fallbacks = ["openrouter/free"]
     return list(dict.fromkeys(m for m in [settings.llm_model, *fallbacks] if m))
+
+
+_NON_CHAT = re.compile(r"embed|rerank|tts|whisper|transcri|image|moderation|guard|safety|translate|ocr|audio", re.I)
+
+
+def _is_free_chat_model(model: Any) -> bool:
+    extra = getattr(model, "model_extra", None) or {}
+    model_id = str(model.id)
+    if _NON_CHAT.search(model_id):
+        return False
+    modality = extra.get("modality") or (extra.get("architecture") or {}).get("modality")
+    if modality and "chat" not in str(modality) and "text->text" not in str(modality):
+        return False
+    pricing = extra.get("pricing") or {}
+    prices = [pricing.get(k) for k in ("input", "output", "prompt", "completion") if k in pricing]
+    free_price = bool(prices) and all(str(p) in {"0", "0.0"} or p == 0 for p in prices)
+    return model_id.endswith(":free") or extra.get("access_tier") == "free" or free_price
+
+
+def _discover_fallbacks(models: list[Any], limit: int = 3) -> list[str]:
+    """Pick free chat models, preferring the main model's vendor (e.g. other MiniMax models)."""
+    vendor = settings.llm_model.split("/")[0] if "/" in settings.llm_model else ""
+    candidates = [str(m.id) for m in models if _is_free_chat_model(m) and str(m.id) != settings.llm_model]
+    same_vendor = [m for m in candidates if vendor and m.startswith(vendor + "/")]
+    others = [m for m in candidates if m not in same_vendor]
+    return (same_vendor[:2] + others)[:limit]
 
 
 def _get_client() -> OpenAI:
@@ -95,11 +128,16 @@ def check_models() -> dict:
     if not is_configured():
         return status
     try:
-        available = {m.id for m in _get_client().models.list()}
+        models = list(_get_client().models.list())
     except Exception as exc:
         log.info("Could not list models from %s: %s", provider_host(), exc)
         return status
+    available = {str(m.id) for m in models}
     status["checked"] = True
+    if not settings.llm_fallback_models and not provider_host().endswith("openrouter.ai"):
+        _auto_fallbacks[:] = _discover_fallbacks(models)
+        if _auto_fallbacks:
+            log.info("Using fallback models from the provider catalog: %s", ", ".join(_auto_fallbacks))
     for model in model_chain():
         if model not in available:
             with _health_lock:
@@ -121,6 +159,7 @@ def model_status() -> dict:
         "provider": provider_host(),
         "model": settings.llm_model,
         "fallback_models": model_chain()[1:],
+        "fallback_source": "configured" if settings.llm_fallback_models else ("catalog" if _auto_fallbacks else ("openrouter" if provider_host().endswith("openrouter.ai") else "none")),
         "model_available": settings.llm_model not in missing,
         "unavailable_models": missing,
         "cooling_down": cooling,
@@ -152,10 +191,23 @@ def _is_model_error(exc: APIStatusError) -> bool:
     )
 
 
+# Models that only work with a bare request (no max_tokens/temperature/response_format)
+_minimal_request_models: set[str] = set()
+
+
 def _call_model(model: str, kwargs: dict[str, Any]) -> str:
     global _json_mode_supported
+    if model in _minimal_request_models:
+        return _create(model=model, messages=kwargs["messages"])
     try:
         return _create(model=model, **kwargs)
+    except InternalServerError:
+        # Some OpenAI-compatible proxies answer 500 to optional parameters they don't
+        # forward (e.g. max_tokens on reasoning models): retry once with a bare request.
+        text = _create(model=model, messages=kwargs["messages"])
+        log.info("Model %s only accepts bare requests; dropping optional parameters for it", model)
+        _minimal_request_models.add(model)
+        return text
     except BadRequestError as exc:
         if "response_format" in kwargs and not _is_model_error(exc):
             log.info("Provider rejected response_format, falling back to prompt-only JSON")
