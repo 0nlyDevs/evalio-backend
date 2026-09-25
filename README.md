@@ -1,16 +1,12 @@
 <div align="center">
   <h1 style="margin-bottom: 0.25rem;">Evalio</h1>
-  <p style="margin-top: 0; color: #6b7280;">AI-powered hackathon evaluation platform — automated code analysis, market research, and LLM scoring.</p>
+  <p style="margin-top: 0; color: #6b7280;">An AI hackathon jury — three specialised judges read the code, research the market and test the product, then a head judge ranks every submission.</p>
   <p>
-    <img alt="Python" src="https://img.shields.io/badge/Python-3.8%2B-3776AB?logo=python&logoColor=white" />
-    <img alt="FastAPI" src="https://img.shields.io/badge/FastAPI-0.110-009688?logo=fastapi&logoColor=white" />
-    <img alt="LangChain" src="https://img.shields.io/badge/LangChain-0.1-1C3C3C?logo=langchain&logoColor=white" />
-  </p>
-  <p>
-    <img alt="PostgreSQL" src="https://img.shields.io/badge/PostgreSQL-336791?logo=postgresql&logoColor=white" />
-    <img alt="ChromaDB" src="https://img.shields.io/badge/ChromaDB-vector%20store-E85D04" />
-    <img alt="HuggingFace" src="https://img.shields.io/badge/HuggingFace-embeddings-FFD21E?logo=huggingface&logoColor=black" />
-    <img alt="OpenAPI" src="https://img.shields.io/badge/OpenAPI-3.0-6BA539?logo=openapiinitiative&logoColor=white" />
+    <img alt="Python" src="https://img.shields.io/badge/Python-3.11%2B-3776AB?logo=python&logoColor=white" />
+    <img alt="FastAPI" src="https://img.shields.io/badge/FastAPI-0.115-009688?logo=fastapi&logoColor=white" />
+    <img alt="PostgreSQL" src="https://img.shields.io/badge/PostgreSQL-queue%20%2B%20storage-336791?logo=postgresql&logoColor=white" />
+    <img alt="ChromaDB" src="https://img.shields.io/badge/ChromaDB-code%20index-E85D04" />
+    <img alt="OpenAI compatible" src="https://img.shields.io/badge/LLM-OpenAI%20compatible-412991" />
   </p>
 </div>
 
@@ -18,144 +14,136 @@
 
 ## Overview
 
-Evalio is a full-stack evaluation engine for hackathons. It automates project scoring by combining static code analysis, live web research, and LLM reasoning — so judges spend time on decisions, not reading code.
+Evalio evaluates hackathon submissions the way a real jury does: each judge owns part of the
+scorecard, scores are weighted by the organisers' criteria, and every opinion is backed by evidence.
 
-- 🤖 **Code Agent** — ingests a GitHub repository via `gitingest`, builds a Chroma vector store from the source, and evaluates each hackathon criterion through RAG.
-- 📊 **Market Agent** — fetches the project README and runs DuckDuckGo searches to assess market fit, competitors, and revenue potential.
-- 🧮 **LLM Scoring** — after both agents complete, a final LLM pass synthesizes findings into a 0–10 score with bullet-point explanations.
-- 🏆 **Leaderboard** — ranked project list per hackathon based on overall scores.
-- 🔍 **Semantic Search** — natural-language project search using HuggingFace sentence embeddings.
-- 💬 **Chat Agent** — project-aware Q&A with conversation history, backed by code analysis context.
+| Judge | What it actually does | Evidence it produces |
+|-------|-----------------------|----------------------|
+| 🧑‍💻 **Code Judge** | Clones the repo, indexes every source file, measures tests / CI / docs / tooling / secrets / commit hygiene, then reviews the code with retrieval (RAG). | File paths, engineering scorecard, stack & language breakdown |
+| 📈 **Market Judge** | Builds a product profile, plans web searches (DuckDuckGo), and writes a cited landscape: audience, market size, competitors, business model, go-to-market, risks. | Numbered web sources, competitor links |
+| 🎨 **Product Judge** | Extracts the features the team claims and verifies each one against the code, probes the demo link, compares originality with competitors and other submissions, and judges theme fit & UX. | Claim checklist (implemented / partial / not found), demo status |
+| ⚖️ **Head Judge** | Computes the final score as a **deterministic weighted mean** of the criteria scores, raises integrity flags, writes the verdict and ranks the hackathon. | Flags, ranking, verdict |
 
-When a project is submitted, `invoke_code_agent` and `invoke_market_agent` run as fire-and-forget `asyncio` tasks. Both write results back to PostgreSQL, then `generate_overall_project_score` triggers automatically.
+Integrity flags include: commits before the hackathon start or after the deadline, 1–2 commit
+"code dumps", hard-coded secrets, committed `.env` files, declared stack ≠ detected stack, expected
+technologies not used, demo down, unverified claims and near-duplicate submissions.
 
----
-
-## Table of Contents
-
-- [Structure](#structure)
-- [Tech Stack](#tech-stack)
-- [Architecture](#architecture)
-- [Quick Start](#quick-start)
-- [Environment](#environment)
-- [OpenAPI](#openapi)
-
-## Structure
-
-```
-evalio/
-  server.py           # FastAPI entry point — loads .env, initialises DB, mounts routers
-  db.py               # PostgreSQL connection + init_db() with auto-migrations
-  agents/
-    codeagent.py      # GitHub repo ingestion, Chroma vectorstore, per-criterion RAG
-    marketagent.py    # README fetch + DuckDuckGo research + LLM market analysis
-    crudagent.py      # CRUD endpoints, LLM overall scoring, semantic search
-    chatagent.py      # Simple chat + project-aware conversational agent
-  docs/
-    spec.yaml         # OpenAPI 3.0 specification
-  SQL_SCHEMA.sql      # Full DB schema with indexes and migration helpers
-  requirements.txt
-  .env.example
-```
-
-## Tech Stack
-
-- **API:** Python 3.8+, FastAPI, Uvicorn
-- **AI / LLM:** LangChain, LangChain-OpenAI (OpenAI-compatible), LangChain-HuggingFace
-- **Vector Store:** ChromaDB with `sentence-transformers/all-MiniLM-L6-v2`
-- **Repo Ingestion:** `gitingest`
-- **Web Search:** `ddgs` (DuckDuckGo)
-- **Database:** PostgreSQL via `psycopg2`
+Each hackathon criterion is routed to the judge best placed to score it (e.g. *Code Quality* → Code
+Judge, *Market Potential* → Market Judge, *Innovation* / *UI/UX* → Product Judge). Organisers set
+weights per criterion. A missing or private repository scores 0 on code criteria; an infrastructure
+failure leaves the criterion unscored so its weight is redistributed.
 
 ## Architecture
 
 ```mermaid
 flowchart LR
-  submit[POST /api/create-project] --> crud[CRUDAgent]
-  crud -->|asyncio task| code[CodeAgent]
-  crud -->|asyncio task| market[MarketAgent]
-  code -->|gitingest| repo[GitHub Repo]
-  repo --> chroma[Chroma\nVectorstore]
-  chroma -->|RAG| llm[LLM]
-  market -->|gitingest| readme[README]
-  market -->|ddgs| web[DuckDuckGo]
-  readme & web --> llm
-  llm --> score[Overall Score]
-  score --> pg[(PostgreSQL)]
-  pg --> leaderboard[GET /api/get-hackathon-leaderboard]
+  submit[POST /api/create-project] --> queue[(evaluation_jobs\nPostgreSQL queue)]
+  queue --> worker[Worker threads / processes]
+  worker --> ingest[Ingest: git clone, metrics,\nstack, git history]
+  ingest --> chroma[(Chroma code index)]
+  ingest --> code[Code Judge]
+  ingest --> market[Market Judge]
+  market --> web[DuckDuckGo]
+  code --> product[Product Judge]
+  market --> product
+  product --> head[Head Judge]
+  head --> db[(projects: verdict,\nscores, flags, rank)]
+  chroma --> chat[Chat with the jury]
 ```
 
-## Quick Start
+- **Durable queue** – submissions are queued in PostgreSQL and claimed with `FOR UPDATE SKIP LOCKED`.
+  Jobs survive restarts, are retried, and are re-claimed if a worker dies (stale heartbeat).
+- **Scale out** – run the API with `RUN_WORKER=false` and start any number of `python worker.py`
+  processes; point them at a shared Chroma server with `CHROMA_HOST`.
+- **Live progress** – each stage (`ingest → code/market → product → verdict`) writes its status to
+  `projects.pipeline`, which the frontend polls.
+- **Robust LLM layer** – works with any OpenAI-compatible endpoint; strips reasoning tags, extracts
+  JSON tolerant of markdown/trailing commas, validates with pydantic and self-repairs once. Without an
+  API key the Code Judge still scores from measured signals.
 
-1. **Configure environment**
+## Structure
+
+```
+server.py              FastAPI app, lifespan (migrations + in-process worker)
+worker.py              Standalone worker process
+config.py              All settings (env vars)
+db.py                  Connection pool, helpers, idempotent migrations
+agents/
+  base.py              Judge context, shared criterion scoring + rubric
+  code_agent.py        Code Judge
+  market_agent.py      Market Judge
+  product_agent.py     Product Judge
+  head_judge.py        Weighted score, integrity flags, verdict
+  chat_agent.py        Project-aware chat (panel reports + code retrieval)
+pipeline/
+  evaluation.py        Orchestrates the jury for one project
+  queue.py             PostgreSQL job queue + worker threads
+routes/                HTTP endpoints and request/response schemas
+services/
+  repo_ingest.py       Clone, file filtering, metrics, stack detection, secrets scan, chunking
+  vectorstore.py       Chroma collections (per-project code + cross-project search)
+  web_search.py        DuckDuckGo search with de-duplication
+  criteria.py          Criteria parsing, weights, judge routing
+  llm.py               OpenAI-compatible client with JSON repair
+```
+
+## Quick start
+
+```bash
+cp .env.example .env          # set LLM_API_KEY and database settings
+pip install -r requirements.txt
+python server.py              # http://localhost:8000 — docs at /docs
+```
+
+Requires `git` on the PATH (repositories are cloned shallowly into a temp dir).
+
+With Docker (API + 2 workers + PostgreSQL + Chroma):
 
 ```bash
 cp .env.example .env
-# Edit .env with your values
+docker compose up --build
 ```
-
-2. **Install dependencies**
-
-```bash
-pip install -r requirements.txt
-```
-
-3. **Ensure PostgreSQL is running** — tables are created automatically on first start via `init_db()`.
-
-4. **Start the server**
-
-```bash
-python server.py
-```
-
-Server runs on `http://0.0.0.0:8000`.
-
-- Swagger UI: `http://localhost:8000/docs`
-- ReDoc: `http://localhost:8000/redoc`
 
 ## Environment
 
 | Variable | Description | Default |
-|---|---|---|
-| `LLM_API_KEY` | API key for the LLM endpoint | Required |
-| `LLM_BASE_URL` | OpenAI-compatible API base URL | `https://api.example.com/v1` |
-| `FREE_LLM_MODEL` | Model identifier | `liquid/lfm-2.5-1.2b-thinking:free` |
-| `HF_TOKEN` | HuggingFace token for embedding model download | Required |
-| `EMBEDDING_MODEL` | Sentence transformer model | `sentence-transformers/all-MiniLM-L6-v2` |
-| `DB_HOST` | PostgreSQL host | `localhost` |
-| `DB_PORT` | PostgreSQL port | `5432` |
-| `DB_NAME` | Database name | `evalio` |
-| `DB_USER` | Database username | `postgres` |
-| `DB_PASSWORD` | Database password | Required |
-| `GITHUB_TOKEN` | GitHub token for private repos | — |
-| `CORS_ORIGINS` | Comma-separated allowed origins. Empty = allow all | — |
-| `BASE_PROMPT` | System prompt prefix prepended to all LLM calls | — |
+|----------|-------------|---------|
+| `LLM_API_KEY` | Key for the OpenAI-compatible endpoint | required for AI judging |
+| `LLM_BASE_URL` | Endpoint | `https://openrouter.ai/api/v1` |
+| `LLM_MODEL` (or `FREE_LLM_MODEL`) | Model id | `liquid/lfm-2.5-1.2b-thinking:free` |
+| `BASE_PROMPT` | Text prepended to every system prompt | – |
+| `DB_HOST` / `DB_PORT` / `DB_NAME` / `DB_USER` / `DB_PASSWORD` | PostgreSQL | `localhost` / `5432` / `evalio` / `postgres` / `postgres` |
+| `GITHUB_TOKEN` | Clone private repos / avoid rate limits | – |
+| `CHROMA_DIR` | Embedded vector store path | `./data/chroma` |
+| `CHROMA_HOST` / `CHROMA_PORT` | Use a Chroma server instead | – / `8000` |
+| `RUN_WORKER` | Run evaluation workers inside the API process | `true` |
+| `WORKER_CONCURRENCY` | Worker threads per process | `2` |
+| `REPO_MAX_CHUNKS` | Max code chunks indexed per repo | `1200` |
+| `WEB_SEARCH_ENABLED` | Let the Market Judge search the web | `true` |
+| `CORS_ORIGINS` | Comma-separated origins (empty = all) | – |
 
-## OpenAPI
+A larger model gives noticeably better judgements; the free default works but is terse.
 
-Full API specification: `docs/spec.yaml`
+## API
 
-### Hackathons
-- `POST /api/create-hackathon` — create a hackathon with custom criteria
-- `GET /api/get-hackathon/{id}` — get hackathon details
-- `GET /api/get-all-hackathons` — list all hackathons
+Interactive docs at `/docs`; the spec is exported to [`docs/spec.yaml`](docs/spec.yaml).
 
-### Projects
-- `POST /api/create-project` — submit a project; triggers async code + market analysis
-- `GET /api/get-project/{project_id}` — get project with full AI analyses and score
-- `GET /api/get-hackathon-projects/{hackathon_id}` — list projects in a hackathon
-- `GET /api/get-all` — list all projects
-
-### Scoring
-- `GET /api/get-project-score/{project_id}` — 0–10 score with explanation
-- `GET /api/get-hackathon-leaderboard/{hackathon_id}` — ranked project list
-
-### Agents
-- `POST /api/code-agent/analyze` — analyze a repo directly
-- `POST /api/market-agent/analyze` — analyze market potential for any idea
-- `POST /api/chat-agent` — project-aware conversational agent
-- `POST /api/chat-agent/simple` — simple Q&A without project context
-
-### Utilities
-- `POST /api/search` — semantic search across all projects
-- `POST /api/review` — mark a project as reviewed
+| Method | Path | Description |
+|--------|------|-------------|
+| `GET` | `/health` | DB / LLM / worker status |
+| `POST` | `/api/create-hackathon` | `name`, `description`, `theme`, `technologies`, `criteria` (string or `[{name, weight}]`), `startsAt`, `deadline`, `isAllowed` |
+| `PATCH` | `/api/update-hackathon/{id}` | Update any of the above (e.g. close submissions) |
+| `GET` | `/api/get-hackathon/{id}` · `/api/get-all-hackathons` | Hackathons with phase and submission stats |
+| `GET` | `/api/get-hackathon-leaderboard/{id}` | Ranked projects with judge scores and flags |
+| `POST` | `/api/create-project` | `name`, `shortDescription`, `longDescription`, `githubLink`, `demoLink`, `hackathonId`, `projectType` — validated and queued |
+| `POST` | `/api/reevaluate/{project_id}` | Run the jury again |
+| `GET` | `/api/get-project/{project_id}` | Full report: verdict, criteria, three judge reports, repo snapshot, pipeline |
+| `GET` | `/api/get-hackathon-projects/{id}` · `/api/get-all` | Project lists |
+| `GET` | `/api/get-project-score/{project_id}` | Final score (0–10), rank, explanation |
+| `DELETE` | `/api/delete-project/{project_id}` | Remove a submission and its index |
+| `POST` | `/api/review` | `project_id`, `isReviewed` — human review flag |
+| `POST` | `/api/search` | `query`, `hackathonId?` — semantic search |
+| `POST` | `/api/chat-agent` | `question`, `project_id`, `chathistory` — ask the jury, answers cite files |
+| `POST` | `/api/chat-agent/simple` | General judging assistant |
+| `POST` | `/api/code-agent/analyze` | Ingest a repo and return its snapshot (no LLM) |
+| `POST` | `/api/market-agent/analyze` | Run the Market Judge on an idea |

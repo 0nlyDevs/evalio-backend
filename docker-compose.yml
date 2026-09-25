@@ -1,0 +1,52 @@
+services:
+  db:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_DB: evalio
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 5s
+      retries: 10
+
+  chroma:
+    image: chromadb/chroma:latest
+    volumes:
+      - chroma:/data
+
+  api:
+    build: .
+    env_file: .env
+    environment:
+      DB_HOST: db
+      CHROMA_HOST: chroma
+      RUN_WORKER: "false"
+    ports:
+      - "8000:8000"
+    depends_on:
+      db:
+        condition: service_healthy
+      chroma:
+        condition: service_started
+
+  worker:
+    build: .
+    command: ["python", "worker.py"]
+    env_file: .env
+    environment:
+      DB_HOST: db
+      CHROMA_HOST: chroma
+    depends_on:
+      db:
+        condition: service_healthy
+      chroma:
+        condition: service_started
+    deploy:
+      replicas: 2
+
+volumes:
+  pgdata:
+  chroma:
