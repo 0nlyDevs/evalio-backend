@@ -7,7 +7,7 @@ from db import Json, execute, fetch_all, fetch_one
 from pipeline.evaluation import index_for_search, initial_pipeline
 from pipeline.queue import enqueue, queue_position
 from routes.schemas import ProjectCreate, ReviewIn, SearchIn, serialize_project
-from services import vectorstore
+from services import llm, vectorstore
 
 router = APIRouter(tags=["Projects"])
 
@@ -20,6 +20,10 @@ _RANKED_SQL = """
         FROM projects WHERE overall_score IS NOT NULL
     ) r ON r.project_id = p.project_id
 """
+
+
+def _is_showcase(row: dict) -> bool:
+    return bool((row.get("verdict") or {}).get("demo"))
 
 
 def get_project_row(project_id: str) -> dict:
@@ -67,7 +71,9 @@ def create_project(body: ProjectCreate):
 
 @router.post("/reevaluate/{project_id}", summary="Run the whole jury again on a project")
 def reevaluate(project_id: str):
-    get_project_row(project_id)
+    row = get_project_row(project_id)
+    if _is_showcase(row) and not llm.is_configured():
+        raise HTTPException(status_code=409, detail="Showcase projects can only be re-judged when an LLM is configured")
     job_id = enqueue(project_id)
     return {"message": "Re-evaluation queued", "project_id": project_id, "job_id": job_id}
 
@@ -83,6 +89,9 @@ def get_project(project_id: str):
 
 @router.delete("/delete-project/{project_id}", summary="Delete a submission and its indexes")
 def delete_project(project_id: str):
+    row = fetch_one("SELECT verdict FROM projects WHERE project_id = %s", (project_id,))
+    if row and _is_showcase(row):
+        raise HTTPException(status_code=403, detail="Showcase projects can't be deleted")
     if execute("DELETE FROM projects WHERE project_id = %s", (project_id,)) == 0:
         raise HTTPException(status_code=404, detail="Project not found")
     vectorstore.delete_project_vectors(project_id)

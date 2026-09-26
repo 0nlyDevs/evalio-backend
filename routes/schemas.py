@@ -151,6 +151,7 @@ def serialize_hackathon(row: dict, stats: dict | None = None) -> dict:
         "is_allowed": bool(row.get("is_allowed")),
         "isAllowed": bool(row.get("is_allowed")),
         "phase": hackathon_phase(row),
+        "is_demo": bool(row.get("is_demo")),
         "starts_at": _iso(row.get("starts_at")),
         "deadline": _iso(row.get("deadline")),
         "created_at": _iso(row.get("created_at")),

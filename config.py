@@ -68,6 +68,11 @@ class Settings:
     worker_concurrency: int = _int("WORKER_CONCURRENCY", 2)
     job_max_attempts: int = _int("JOB_MAX_ATTEMPTS", 2)
     job_stale_minutes: int = _int("JOB_STALE_MINUTES", 20)
+    # Hard budget for a pipeline stage (ingest/code/market/product/verdict): a
+    # stuck call is abandoned instead of wedging the worker and the queue.
+    stage_timeout: int = _int("STAGE_TIMEOUT", 900)
+    # Hard budget for indexing the source into Chroma (best effort).
+    index_timeout: int = _int("REPO_INDEX_TIMEOUT", 240)
 
     # Web search for the market agent
     web_search_enabled: bool = _bool("WEB_SEARCH_ENABLED", True)

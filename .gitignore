@@ -10,4 +10,4 @@ wheels/
 .venv
 .env
 # Local vector store
-data/
+/data/

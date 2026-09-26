@@ -1,0 +1,538 @@
+{
+ "snapshot": {
+  "repo": {
+   "url": "https://github.com/colombefioren/KOKORO",
+   "owner": "colombefioren",
+   "name": "KOKORO",
+   "host": "github.com",
+   "branch": "main",
+   "commit": "4973f6c22ac7"
+  },
+  "ingested_at": "2026-09-25T11:57:09.546337+00:00",
+  "files": {
+   "tracked": 405,
+   "analyzed": 226,
+   "code_files": 210,
+   "code_loc": 21088,
+   "skipped": 179
+  },
+  "languages": [
+   {
+    "name": "TypeScript",
+    "loc": 20721,
+    "files": 207,
+    "share": 0.884
+   },
+   {
+    "name": "YAML",
+    "loc": 2130,
+    "files": 2,
+    "share": 0.091
+   },
+   {
+    "name": "CSS",
+    "loc": 341,
+    "files": 1,
+    "share": 0.015
+   },
+   {
+    "name": "JSON",
+    "loc": 155,
+    "files": 4,
+    "share": 0.007
+   },
+   {
+    "name": "Markdown",
+    "loc": 78,
+    "files": 1,
+    "share": 0.003
+   },
+   {
+    "name": "JavaScript",
+    "loc": 26,
+    "files": 2,
+    "share": 0.001
+   }
+  ],
+  "largest_files": [
+   {
+    "path": "src/specs/openapi.yaml",
+    "loc": 2048
+   },
+   {
+    "path": "src/api/ApiClient.ts",
+    "loc": 1545
+   },
+   {
+    "path": "src/components/chat/chat-main.tsx",
+    "loc": 686
+   },
+   {
+    "path": "server.mts",
+    "loc": 642
+   },
+   {
+    "path": "src/components/room/room-panel.tsx",
+    "loc": 637
+   },
+   {
+    "path": "src/components/room/chat-sidebar.tsx",
+    "loc": 532
+   },
+   {
+    "path": "src/components/room/youtube/video-player.tsx",
+    "loc": 502
+   },
+   {
+    "path": "src/components/room/edit-room-form.tsx",
+    "loc": 454
+   }
+  ],
+  "dependencies": {
+   "npm": [
+    "@eslint/eslintrc",
+    "@hookform/resolvers",
+    "@prisma/client",
+    "@prisma/extension-accelerate",
+    "@radix-ui/react-avatar",
+    "@radix-ui/react-checkbox",
+    "@radix-ui/react-label",
+    "@radix-ui/react-select",
+    "@radix-ui/react-slider",
+    "@radix-ui/react-slot",
+    "@radix-ui/react-tabs",
+    "@supabase/supabase-js",
+    "@tailwindcss/postcss",
+    "@tanstack/react-query",
+    "@tanstack/react-query-devtools",
+    "@testing-library/jest-dom",
+    "@testing-library/react",
+    "@types/node",
+    "@types/node-cron",
+    "@types/react",
+    "@types/react-dom",
+    "@types/socket.io",
+    "@types/youtube",
+    "@vercel/analytics",
+    "better-auth",
+    "class-variance-authority",
+    "clsx",
+    "eslint",
+    "eslint-config-next",
+    "framer-motion",
+    "husky",
+    "jsdom",
+    "lint-staged",
+    "lucide-react",
+    "next",
+    "next-themes",
+    "node-cron",
+    "node-fetch",
+    "prettier",
+    "prisma"
+   ]
+  },
+  "stack": {
+   "frameworks": [
+    {
+     "id": "NEXT_JS",
+     "label": "Next.js"
+    },
+    {
+     "id": "REACT",
+     "label": "React"
+    },
+    {
+     "id": "TAILWIND",
+     "label": "Tailwind CSS"
+    }
+   ],
+   "libraries": [
+    "Prisma",
+    "Socket.IO",
+    "Supabase",
+    "TanStack Query",
+    "Vitest",
+    "Zod",
+    "Zustand"
+   ],
+   "primary_type": "NEXT_JS",
+   "frontend_only": false
+  },
+  "signals": {
+   "has_readme": true,
+   "readme_chars": 5600,
+   "readme_sections": 8,
+   "has_tests": true,
+   "test_files": 11,
+   "has_ci": true,
+   "has_docker": false,
+   "has_license": true,
+   "has_env_example": true,
+   "has_linter": true,
+   "has_type_checking": true,
+   "has_gitignore": true,
+   "committed_secrets_risk": [],
+   "hardcoded_secrets": [],
+   "committed_dependencies": false
+  },
+  "history": {
+   "commit_count": 127,
+   "truncated": false,
+   "first_commit_at": "2025-09-20T12:17:33+03:00",
+   "last_commit_at": "2026-09-24T20:43:18+03:00",
+   "contributors": [
+    {
+     "name": "colombefioren",
+     "commits": 126
+    },
+    {
+     "name": "Vercel",
+     "commits": 1
+    }
+   ],
+   "commits_per_day": {
+    "2025-09-20": 2,
+    "2025-09-22": 3,
+    "2025-09-23": 1,
+    "2025-10-06": 1,
+    "2025-10-09": 1,
+    "2025-10-10": 2,
+    "2025-10-11": 1,
+    "2025-10-14": 10,
+    "2025-10-15": 2,
+    "2026-01-08": 4,
+    "2026-01-10": 7,
+    "2026-01-11": 1,
+    "2026-09-14": 9,
+    "2026-09-15": 23,
+    "2026-09-19": 45,
+    "2026-09-20": 2,
+    "2026-09-24": 13
+   },
+   "low_quality_messages": 0,
+   "recent_commits": [
+    {
+     "sha": "4973f6c22a",
+     "author": "colombefioren",
+     "date": "2026-09-24T20:43:18+03:00",
+     "subject": "fix: broadcast saved messages so reactions work"
+    },
+    {
+     "sha": "d5d319ebbc",
+     "author": "colombefioren",
+     "date": "2026-09-24T20:43:16+03:00",
+     "subject": "test: cover video sync between room members"
+    },
+    {
+     "sha": "a16ca4d356",
+     "author": "colombefioren",
+     "date": "2026-09-24T20:43:14+03:00",
+     "subject": "fix: free-for-all video sync glitching"
+    },
+    {
+     "sha": "56f0e5c329",
+     "author": "colombefioren",
+     "date": "2026-09-24T20:32:18+03:00",
+     "subject": "fix: bring back room members under the video"
+    },
+    {
+     "sha": "84475e35e1",
+     "author": "colombefioren",
+     "date": "2026-09-24T20:27:23+03:00",
+     "subject": "fix: voice bar never shows a vertical scrollbar"
+    },
+    {
+     "sha": "dd41ff7109",
+     "author": "colombefioren",
+     "date": "2026-09-24T20:20:48+03:00",
+     "subject": "fix: room page never scrolls, video fits the screen"
+    },
+    {
+     "sha": "6caebfe95d",
+     "author": "colombefioren",
+     "date": "2026-09-24T20:04:49+03:00",
+     "subject": "test: cover the reaction picker and enable jsx in vitest"
+    },
+    {
+     "sha": "5aa137f5ed",
+     "author": "colombefioren",
+     "date": "2026-09-24T20:04:45+03:00",
+     "subject": "fix: render reaction picker above everything"
+    },
+    {
+     "sha": "764ce3a5e8",
+     "author": "colombefioren",
+     "date": "2026-09-24T20:04:40+03:00",
+     "subject": "fix: keep room videos 16:9 on every screen size"
+    },
+    {
+     "sha": "4f3fa8fb8d",
+     "author": "colombefioren",
+     "date": "2026-09-24T19:49:01+03:00",
+     "subject": "fix: oversized avatar in chat header"
+    },
+    {
+     "sha": "e68edce91a",
+     "author": "colombefioren",
+     "date": "2026-09-24T19:18:22+03:00",
+     "subject": "feat: add bundled room cover images"
+    },
+    {
+     "sha": "189d6a07d0",
+     "author": "colombefioren",
+     "date": "2026-09-24T19:18:18+03:00",
+     "subject": "fix: only delete old room thumbnails stored in supabase"
+    },
+    {
+     "sha": "3426df765f",
+     "author": "colombefioren",
+     "date": "2026-09-24T19:18:14+03:00",
+     "subject": "fix: accept bundled cover paths in room thumbnail validation"
+    },
+    {
+     "sha": "e21b82045f",
+     "author": "colombefioren",
+     "date": "2026-09-20T11:24:29+03:00",
+     "subject": "feat: allow wikimedia images for room thumbnails"
+    },
+    {
+     "sha": "9e9b5ccf31",
+     "author": "colombefioren",
+     "date": "2026-09-20T10:44:14+03:00",
+     "subject": "feat: show room control mode to non-host members too"
+    }
+   ],
+   "commit_dates": [
+    "2026-09-24T20:43:18+03:00",
+    "2026-09-24T20:43:16+03:00",
+    "2026-09-24T20:43:14+03:00",
+    "2026-09-24T20:32:18+03:00",
+    "2026-09-24T20:27:23+03:00",
+    "2026-09-24T20:20:48+03:00",
+    "2026-09-24T20:04:49+03:00",
+    "2026-09-24T20:04:45+03:00",
+    "2026-09-24T20:04:40+03:00",
+    "2026-09-24T19:49:01+03:00",
+    "2026-09-24T19:18:22+03:00",
+    "2026-09-24T19:18:18+03:00",
+    "2026-09-24T19:18:14+03:00",
+    "2026-09-20T11:24:29+03:00",
+    "2026-09-20T10:44:14+03:00",
+    "2026-09-19T14:08:55+03:00",
+    "2026-09-19T13:56:59+03:00",
+    "2026-09-19T12:52:09+03:00",
+    "2026-09-19T12:52:04+03:00",
+    "2026-09-19T12:41:36+03:00",
+    "2026-09-19T12:39:10+03:00",
+    "2026-09-19T12:36:09+03:00",
+    "2026-09-19T12:14:20+03:00",
+    "2026-09-19T12:00:05+03:00",
+    "2026-09-19T11:52:05+03:00",
+    "2026-09-19T11:52:01+03:00",
+    "2026-09-19T11:51:56+03:00",
+    "2026-09-19T11:51:51+03:00",
+    "2026-09-19T11:29:10+03:00",
+    "2026-09-19T11:25:33+03:00",
+    "2026-09-19T11:24:38+03:00",
+    "2026-09-19T11:20:58+03:00",
+    "2026-09-19T11:19:16+03:00",
+    "2026-09-19T11:18:43+03:00",
+    "2026-09-19T11:16:04+03:00",
+    "2026-09-19T11:14:03+03:00",
+    "2026-09-19T11:13:22+03:00",
+    "2026-09-19T11:10:57+03:00",
+    "2026-09-19T11:10:05+03:00",
+    "2026-09-19T11:07:03+03:00",
+    "2026-09-19T11:01:52+03:00",
+    "2026-09-19T10:59:54+03:00",
+    "2026-09-19T10:58:14+03:00",
+    "2026-09-19T10:52:42+03:00",
+    "2026-09-19T10:51:45+03:00",
+    "2026-09-19T10:51:37+03:00",
+    "2026-09-19T10:48:08+03:00",
+    "2026-09-19T10:47:19+03:00",
+    "2026-09-19T10:46:50+03:00",
+    "2026-09-19T10:44:22+03:00",
+    "2026-09-19T10:43:16+03:00",
+    "2026-09-19T10:42:37+03:00",
+    "2026-09-19T10:42:10+03:00",
+    "2026-09-19T10:41:07+03:00",
+    "2026-09-19T10:40:58+03:00",
+    "2026-09-19T10:37:52+03:00",
+    "2026-09-19T10:37:42+03:00",
+    "2026-09-19T10:37:32+03:00",
+    "2026-09-19T10:37:22+03:00",
+    "2026-09-19T10:35:03+03:00",
+    "2026-09-15T19:24:34+03:00",
+    "2026-09-15T18:52:56+03:00",
+    "2026-09-15T18:50:50+03:00",
+    "2026-09-15T18:48:35+03:00",
+    "2026-09-15T18:40:38+03:00",
+    "2026-09-15T18:39:11+03:00",
+    "2026-09-15T18:36:31+03:00",
+    "2026-09-15T18:32:08+03:00",
+    "2026-09-15T18:19:54+03:00",
+    "2026-09-15T17:35:53+03:00",
+    "2026-09-15T17:32:02+03:00",
+    "2026-09-15T17:24:05+03:00",
+    "2026-09-15T17:20:44+03:00",
+    "2026-09-15T17:16:39+03:00",
+    "2026-09-15T17:12:40+03:00",
+    "2026-09-15T17:06:26+03:00",
+    "2026-09-15T17:00:26+03:00",
+    "2026-09-15T16:56:08+03:00",
+    "2026-09-15T16:50:40+03:00",
+    "2026-09-15T16:49:03+03:00",
+    "2026-09-15T16:48:53+03:00",
+    "2026-09-15T16:48:47+03:00",
+    "2026-09-15T16:39:41+03:00",
+    "2026-09-14T17:54:18+03:00",
+    "2026-09-14T17:46:16+03:00",
+    "2026-09-14T17:36:14+03:00",
+    "2026-09-14T17:30:07+03:00",
+    "2026-09-14T17:07:18+03:00",
+    "2026-09-14T16:59:50+03:00",
+    "2026-09-14T13:25:35+03:00",
+    "2026-09-14T13:19:20+03:00",
+    "2026-09-14T12:25:10+03:00",
+    "2026-01-11T11:19:16+03:00",
+    "2026-01-10T14:34:10+03:00",
+    "2026-01-10T14:21:50+03:00",
+    "2026-01-10T14:06:39+03:00",
+    "2026-01-10T13:54:48+03:00",
+    "2026-01-10T13:27:49+03:00",
+    "2026-01-10T13:06:37+03:00",
+    "2026-01-10T12:58:13+03:00",
+    "2026-01-08T14:34:07+03:00",
+    "2026-01-08T09:44:46+03:00",
+    "2026-01-08T09:44:26+03:00",
+    "2026-01-08T06:37:23Z",
+    "2025-10-15T12:07:03+03:00",
+    "2025-10-15T12:02:03+03:00",
+    "2025-10-14T18:54:22+03:00",
+    "2025-10-14T18:30:24+03:00",
+    "2025-10-14T17:59:16+03:00",
+    "2025-10-14T17:59:00+03:00",
+    "2025-10-14T17:38:30+03:00",
+    "2025-10-14T16:52:14+03:00",
+    "2025-10-14T16:24:02+03:00",
+    "2025-10-14T16:15:30+03:00",
+    "2025-10-14T16:04:04+03:00",
+    "2025-10-14T15:59:50+03:00",
+    "2025-10-11T15:12:15+03:00",
+    "2025-10-10T16:34:44+03:00",
+    "2025-10-10T14:03:44+03:00",
+    "2025-10-09T12:49:05+03:00",
+    "2025-10-06T12:34:13+03:00",
+    "2025-09-23T10:51:02+03:00",
+    "2025-09-22T11:26:12+03:00",
+    "2025-09-22T10:48:28+03:00",
+    "2025-09-22T10:24:35+03:00",
+    "2025-09-20T12:29:07+03:00",
+    "2025-09-20T12:17:33+03:00"
+   ]
+  },
+  "tree": ".env.example\n.gitignore\n.npmrc\nLICENSE\nREADME.md\ncomponents.json\neslint.config.mjs\nglobal.d.ts\nnext.config.ts\npackage.json\npostcss.config.mjs\nserver.mts\ntsconfig.json\ntsconfig.server.json\nvitest.config.ts\n.github/ (1 files)\n.github/workflows/ (1 files)\n.husky/ (1 files)\nprisma/ (1 files)\nsrc/ (208 files)\nsrc/__tests__/ (1 files)\nsrc/api/ (1 files)\nsrc/app/ (61 files)\nsrc/app/(app)/ (15 files)\nsrc/app/actions/ (6 files)\nsrc/app/api/ (34 files)\nsrc/app/auth/ (3 files)\nsrc/components/ (79 files)\nsrc/components/auth/ (4 files)\nsrc/components/chat/ (8 files)\nsrc/components/layout/ (7 files)\nsrc/components/notifications/ (1 files)\nsrc/components/profile/ (10 files)\nsrc/components/room/ (24 files)\nsrc/components/settings/ (8 files)\nsrc/components/ui/ (14 files)\nsrc/hooks/ (18 files)\nsrc/hooks/chats/ (5 files)\nsrc/hooks/notifications/ (1 files)\nsrc/hooks/rooms/ (4 files)\nsrc/hooks/users/ (7 files)\nsrc/lib/ (30 files)\nsrc/lib/__tests__/ (8 files)\nsrc/lib/auth/ (3 files)\nsrc/lib/cron/ (3 files)\nsrc/lib/db/ (4 files)\nsrc/lib/rooms/ (1 files)\nsrc/lib/validation/ (5 files)\nsrc/providers/ (1 files)\nsrc/services/ (6 files)\nsrc/specs/ (1 files)\nsrc/store/ (3 files)\nsrc/types/ (6 files)",
+  "readme": "<div align=\"center\">\n\n<div style=\"display: flex; flex-direction: row; align-items: center; gap: 1rem; margin-bottom: 1rem;\">\n  <img src=\"https://i.ibb.co/9HW62gc6/logo.png\" alt=\"Kokoro Logo\" width=\"80\" height=\"80\"/>\n  <div>\n    <h1 style=\"margin: 0;\">KOKORO \u2014 Heart to Heart</h1>\n  </div>\n</div>\n\n<p>A real-time space to chat and watch videos together with friends \u2728</p>\n\n<div align=\"center\" style=\"margin-bottom: 1rem; margin-top: 1rem;\">\n  <img src=\"https://img.shields.io/badge/Next.js-000000?style=for-the-badge&logo=nextdotjs&logoColor=white\">\n  <img src=\"https://img.shields.io/badge/TypeScript-3178C6?style=for-the-badge&logo=typescript&logoColor=white\">\n  <img src=\"https://img.shields.io/badge/Tailwind_CSS-38B2AC?style=for-the-badge&logo=tailwind-css&logoColor=white\">\n  <img src=\"https://img.shields.io/badge/Supabase-3FCF8E?style=for-the-badge&logo=supabase&logoColor=white\">\n  <img src=\"https://img.shields.io/badge/Prisma-0C344B?style=for-the-badge&logo=prisma&logoColor=white\">\n  <img src=\"https://img.shields.io/badge/Socket.IO-010101?style=for-the-badge&logo=socket.io&logoColor=white\">\n  <img src=\"https://img.shields.io/badge/Zustand-000?style=for-the-badge&logo=zustand&logoColor=white\">\n  <img src=\"https://img.shields.io/badge/Framer_Motion-0055FF?style=for-the-badge&logo=framer&logoColor=white\">\n  <img src=\"https://img.shields.io/badge/BetterAuth-FF6B35?style=for-the-badge&logo=auth0&logoColor=white\">\n  <img src=\"https://img.shields.io/badge/shadcn/UI-000000?style=for-the-badge&logo=react&logoColor=white\">\n  <img src=\"https://img.shields.io/badge/Zod-3068B7?style=for-the-badge&logo=zod&logoColor=white\">\n  <img src=\"https://img.shields.io/badge/Render-46E3B7?style=for-the-badge&logo=render&logoColor=white\">\n  <img src=\"https://img.shields.io/badge/Vercel-000000?style=for-the-badge&logo=vercel&logoColor=white\">\n</div>\n\n</div>\n\n## \u2728 What is Kokoro?\n\nKokoro (\u5fc3) means \"heart\" in Japanese, and that's exactly what this app is about - creating heartfelt connections through shared experiences.\n\nImagine watching your favorite YouTube videos with friends, chatting in real-time, and feeling like you're in the same room, even when you're miles apart. That's the magic of Kokoro \ud83c\udf1f\n\n## \ud83c\udf80 Beautiful Features\n\n| Feature                                 | Description                                                                                                                        | Technology              |\n| :-------------------------------------- | :------------------",
+  "indexed_chunks": 0
+ },
+ "sources": [
+  {
+   "id": 1,
+   "title": "Best Watch Party Apps 2026: 8 Tested, 4 No Signup | SyncUp",
+   "url": "https://syncup.tv/blog/best-watch-party-apps-2026",
+   "domain": "syncup.tv",
+   "snippet": "Watch Party Apps Compared 1. SyncUp SyncUp is a browser-based watch party platform focused on simplicity. No account creation required, and it supports YouTube, Twitch, Kick, SoundCloud, YouTube Music, and other HTML5 video sites natively. Key Features: No signup required, share a link and start watching Real-time sync with Socket.IO technology"
+  },
+  {
+   "id": 2,
+   "title": "Watch YouTube Together: 8 Best Apps Tested in 2026 | SyncUp",
+   "url": "https://syncup.tv/blog/best-youtube-watch-party-apps-2026",
+   "domain": "syncup.tv",
+   "snippet": "A sync room sends commands, not video: everyone's own browser streams from YouTube, and the room only coordinates play, pause and seek. Screen sharing re-encodes the video and relays it through the host's upload, so you lose quality, add latency and one person's connection becomes everyone's ceiling."
+  },
+  {
+   "id": 3,
+   "title": "WatchMates - Watch Party Extension | Teleparty Alternative",
+   "url": "https://www.watchmates.net/",
+   "domain": "watchmates.net",
+   "snippet": "WatchMates - The ultimate watch party extension and Netflix party alternative. Host synchronized watch parties, video sync sessions across thousands of streaming platforms with real-time chat."
+  },
+  {
+   "id": 4,
+   "title": "YouTube Watch Party \u2014 Watch YouTube Together With Friends - anidachi.app",
+   "url": "https://www.anidachi.app/watch-youtube-together",
+   "domain": "anidachi.app",
+   "snippet": "YouTube watch party hub: sync full videos with friends via Chrome extension, Teleparty, or Discord \u2014 AniDachi offers live sync and personal history. Start free at pricing."
+  },
+  {
+   "id": 5,
+   "title": "Teleparty | Watch together on Netflix, Youtube, HBO Max + more",
+   "url": "https://www.teleparty.com/",
+   "domain": "teleparty.com",
+   "snippet": "Teleparty (formerly Netflix Party) lets you watch TV together with your friends. Have a watch party on Netflix,Youtube,Disney Plus,Hulu,HBO,and Amazon Prime!"
+  },
+  {
+   "id": 6,
+   "title": "The Best Watch Party Websites in 2026 \u2014 An Honest Comparison",
+   "url": "https://watchtogether.watch/blog/best-watch-party-websites",
+   "domain": "watchtogether.watch",
+   "snippet": "A practical comparison of the most popular watch party websites in 2026: Teleparty, Hyperbeam, Kosmi, Scener, Discord, WatchTogether. What each does well, what they get wrong, and which fits your group."
+  },
+  {
+   "id": 7,
+   "title": "Great Teleparty Alternatives: Top Watch Videos Together Tools in 2026",
+   "url": "https://alternativeto.net/software/netflix-party/",
+   "domain": "alternativeto.net",
+   "snippet": "The best Teleparty alternatives are Metastream, Hyperbeam and Rave. Our crowd-sourced lists contains more than 25 apps similar to Teleparty for Web-based, Mac, Windows, Google Chrome and more."
+  },
+  {
+   "id": 8,
+   "title": "Rave Alternatives 2026: Watch Together Without an App or Account",
+   "url": "https://whumblezone.com/blog/rave-alternatives",
+   "domain": "whumblezone.com",
+   "snippet": "Watch2Gether and Teleparty rows describe the well-established shape of each product rather than a tested feature audit \u2014 check current details on their own sites."
+  },
+  {
+   "id": 9,
+   "title": "Apps Like Rave - TMS Outsource",
+   "url": "https://tms-outsource.com/blog/posts/apps-like-rave/",
+   "domain": "tms-outsource.com",
+   "snippet": "Discover the best apps like Rave for synchronized streaming. Compare TeleParty, Scener, Kast & more for watch parties with friends."
+  },
+  {
+   "id": 10,
+   "title": "Top 10 Best Watch Party Software | 2026 Expert Picks",
+   "url": "https://worldmetrics.org/best/watch-party-software/",
+   "domain": "worldmetrics.org",
+   "snippet": "Entertainment Events Top 10 Best Watch Party Software of 2026 Top 10 watch party software ranked for streaming group chats, comparing Rave, Teleparty, Watch2Gether, plus Kosmi, Syncplay, and Jellyfin pros and limits. Watch party software tools coordinate playback across remote viewers while routing group chat and media controls."
+  },
+  {
+   "id": 11,
+   "title": "Social Video Platform Market Report | In-Depth Analysis 2035",
+   "url": "https://www.wiseguyreports.com/reports/social-video-platform-market",
+   "domain": "wiseguyreports.com",
+   "snippet": "The Social Video Platform Market was valued at USD 55.2 Billion in 2025 and is projected to grow to USD 120 Billion by 2035, at a CAGR of 8.1%."
+  },
+  {
+   "id": 12,
+   "title": "Short Video Platform Market Size, Share, Growth, Analysis, 2034",
+   "url": "https://straitsresearch.com/report/short-video-platform-market",
+   "domain": "straitsresearch.com",
+   "snippet": "Aug 24, 2026 \u00b7 North America dominated the short video platform market with a market share of 34.7% in 2025. A short video platform is a digital content-sharing service that allows users to create, upload, and consume brief video clips, typically ranging from a few seconds to a few minutes."
+  }
+ ],
+ "queries": [
+  "watch party app youtube sync with friends alternatives",
+  "Teleparty Rave Watch2Gether comparison",
+  "social video watch together market size"
+ ],
+ "demo": {
+  "url": "https://kokoro-backend.onrender.com",
+  "final_url": "https://kokoro-backend.onrender.com/auth/",
+  "reachable": true,
+  "status_code": 200,
+  "title": "KOKORO | Heart To Heart"
+ }
+}
