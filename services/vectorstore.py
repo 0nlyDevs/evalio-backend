@@ -1,13 +1,18 @@
 """Chroma vector store: one collection per project codebase plus a shared
 collection used for semantic search across all submissions.
 
-Embeddings use Chroma's bundled ONNX all-MiniLM-L6-v2 model (no torch needed).
-Set CHROMA_HOST to use a shared Chroma server when running several workers.
+Embeddings default to Chroma's bundled ONNX all-MiniLM-L6-v2 model, but when an
+OpenAI-compatible embeddings endpoint is configured (EMBEDDING_*) a remote call is
+used instead: loading the ONNX model in-process needs 600MB+ of RAM and can stall
+on first download, which is fatal on small hosts. Set CHROMA_HOST to use a shared
+Chroma server when running several workers.
 """
 
+import hashlib
 import logging
 import os
 import threading
+from functools import lru_cache
 from typing import Any
 
 import chromadb
@@ -20,6 +25,44 @@ log = logging.getLogger(__name__)
 PROJECTS_COLLECTION = "evalio-projects"
 _client: Any = None
 _lock = threading.Lock()
+
+
+def _remote_embeddings_enabled() -> bool:
+    return bool(settings.embedding_model and (settings.embedding_api_key or settings.embedding_base_url))
+
+
+def embedding_signature() -> str:
+    """Short digest of the *effective* embedding configuration.
+
+    Vectors from different models are incompatible, so each configuration gets
+    its own collections instead of failing on a dimension mismatch when the
+    embedding provider changes. Falls back to "chroma-default" whenever the
+    bundled local model is used, so a model id without an endpoint never names
+    collections as if they held remote vectors.
+    """
+    basis = f"{settings.embedding_base_url}|{settings.embedding_model}" if _remote_embeddings_enabled() else "chroma-default"
+    return hashlib.sha1(basis.encode()).hexdigest()[:8]
+
+
+@lru_cache(maxsize=1)
+def get_embedding_function():
+    """Remote OpenAI-compatible embeddings, or None to use Chroma's bundled model."""
+    if not _remote_embeddings_enabled():
+        return None
+    from chromadb.utils.embedding_functions import OpenAIEmbeddingFunction
+
+    return OpenAIEmbeddingFunction(
+        api_key=settings.embedding_api_key or None,
+        model_name=settings.embedding_model,
+        api_base=settings.embedding_base_url or None,
+        # Chroma persists the config (without the key) and rebuilds it from this
+        # env var, so pass the name it should read back.
+        api_key_env_var="EMBEDDING_API_KEY",
+    )
+
+
+def projects_collection_name() -> str:
+    return f"{PROJECTS_COLLECTION}-{embedding_signature()}"
 
 
 def get_client():
@@ -43,7 +86,7 @@ def get_client():
 
 
 def code_collection_name(project_id: str) -> str:
-    return f"code-{project_id}"
+    return f"code-{embedding_signature()}-{project_id}"
 
 
 def reset_code_collection(project_id: str):
@@ -53,12 +96,16 @@ def reset_code_collection(project_id: str):
         client.delete_collection(name)
     except Exception:
         pass
-    return client.create_collection(name, metadata={"hnsw:space": "cosine"})
+    return client.create_collection(
+        name, metadata={"hnsw:space": "cosine"}, embedding_function=get_embedding_function()
+    )
 
 
 def get_code_collection(project_id: str):
     try:
-        return get_client().get_collection(code_collection_name(project_id))
+        return get_client().get_collection(
+            code_collection_name(project_id), embedding_function=get_embedding_function()
+        )
     except Exception:
         return None
 
@@ -139,7 +186,9 @@ def format_chunks(chunks: list[dict]) -> str:
 
 def _projects_collection():
     return get_client().get_or_create_collection(
-        PROJECTS_COLLECTION, metadata={"hnsw:space": "cosine"}
+        projects_collection_name(),
+        metadata={"hnsw:space": "cosine"},
+        embedding_function=get_embedding_function(),
     )
 
 

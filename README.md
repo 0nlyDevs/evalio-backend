@@ -103,6 +103,7 @@ docker compose up --build
 | `GITHUB_TOKEN` | Clone private repos / avoid rate limits | – |
 | `CHROMA_DIR` | Embedded vector store path | `./data/chroma` |
 | `CHROMA_HOST` / `CHROMA_PORT` | Use a Chroma server instead | – / `8000` |
+| `EMBEDDING_BASE_URL` / `EMBEDDING_MODEL` / `EMBEDDING_API_KEY` | OpenAI-compatible embeddings endpoint for the code index and search; empty = Chroma's bundled ONNX model | – |
 | `RUN_WORKER` | Run evaluation workers inside the API process | `true` |
 | `WORKER_CONCURRENCY` | Worker threads per process | `2` |
 | `REPO_MAX_CHUNKS` | Max code chunks indexed per repo | `1200` |

@@ -55,6 +55,15 @@ class Settings:
     chroma_host: str = os.getenv("CHROMA_HOST", "")
     chroma_port: int = _int("CHROMA_PORT", 8000)
 
+    # Embeddings for the code index and semantic search. When set, an
+    # OpenAI-compatible /embeddings endpoint is used instead of Chroma's
+    # bundled ONNX model: loading that model in-process needs 600MB+ of RAM
+    # (more than a Render free instance) and can stall on first download.
+    # Leave empty to fall back to the local model (fine on a dev machine).
+    embedding_base_url: str = os.getenv("EMBEDDING_BASE_URL", "")
+    embedding_model: str = os.getenv("EMBEDDING_MODEL", "")
+    embedding_api_key: str = os.getenv("EMBEDDING_API_KEY", "")
+
     # Repository ingestion
     github_token: str = os.getenv("GITHUB_TOKEN", "")
     repo_clone_timeout: int = _int("REPO_CLONE_TIMEOUT", 180)
