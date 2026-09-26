@@ -10,6 +10,7 @@ import logging
 import os
 import re
 import shutil
+import signal
 import subprocess
 import tempfile
 from collections import Counter, defaultdict
@@ -22,6 +23,7 @@ import tomllib
 
 from config import settings
 from services import vectorstore
+from services.watchdog import run_with_timeout
 
 log = logging.getLogger(__name__)
 
@@ -207,17 +209,40 @@ def _clone_url(ref: RepoRef) -> str:
     return f"{ref.url}.git"
 
 
+def _kill_group(proc: subprocess.Popen) -> None:
+    """Kill `git` and any helper it spawned (git-remote-https...).
+
+    A plain `proc.kill()` leaves those children alive holding the pipe, so a
+    stalled clone can block on `communicate()` well past its timeout.
+    """
+    try:
+        os.killpg(os.getpgid(proc.pid), signal.SIGKILL)
+    except (ProcessLookupError, PermissionError, OSError):
+        proc.kill()
+
+
 def _git(args: list[str], cwd: str | None = None, timeout: int = 60) -> str:
     env = {**os.environ, "GIT_TERMINAL_PROMPT": "0", "GIT_LFS_SKIP_SMUDGE": "1"}
-    proc = subprocess.run(
-        ["git", *args], cwd=cwd, capture_output=True, text=True, timeout=timeout, env=env
+    proc = subprocess.Popen(
+        ["git", *args], cwd=cwd, env=env, text=True,
+        stdin=subprocess.DEVNULL, stdout=subprocess.PIPE, stderr=subprocess.PIPE,
+        start_new_session=True,  # own process group, so we can kill the whole tree
     )
+    try:
+        out, err = proc.communicate(timeout=timeout)
+    except subprocess.TimeoutExpired as exc:
+        _kill_group(proc)
+        try:
+            proc.communicate(timeout=5)  # reap the killed process tree
+        except subprocess.TimeoutExpired:
+            pass
+        raise IngestError(f"git {args[0]} timed out after {timeout}s") from exc
     if proc.returncode != 0:
-        message = (proc.stderr or proc.stdout).strip()
+        message = (err or out).strip()
         if settings.github_token:
             message = message.replace(settings.github_token, "***")
         raise IngestError(message.splitlines()[-1] if message else "git failed")
-    return proc.stdout
+    return out
 
 
 def clone(ref: RepoRef, dest: str) -> None:
@@ -229,8 +254,6 @@ def clone(ref: RepoRef, dest: str) -> None:
             ],
             timeout=settings.repo_clone_timeout,
         )
-    except subprocess.TimeoutExpired as exc:
-        raise IngestError("Cloning the repository timed out (repo too large?)") from exc
     except IngestError as exc:
         text = str(exc).lower()
         if "not found" in text or "could not read username" in text or "authentication" in text:
@@ -590,16 +613,32 @@ def _analyse_checkout(ref, repo_dir, tracked, head, branch, project_id, index) -
     }
 
     if index and project_id:
-        chunks: list[dict] = []
-        for path, text in texts.items():  # already priority-ordered
-            if len(chunks) >= settings.repo_max_chunks:
-                break
-            chunks.extend(_chunk_file(path, text, _language(path)))
-        chunks = chunks[: settings.repo_max_chunks]
-        collection = vectorstore.reset_code_collection(project_id)
-        vectorstore.add_chunks(collection, chunks)
-        snapshot["indexed_chunks"] = len(chunks)
-        snapshot["index_truncated"] = len(chunks) >= settings.repo_max_chunks
-        log.info("Indexed %s chunks from %s for project %s", len(chunks), ref.url, project_id)
+        # Indexing is best effort: a slow or stuck embedder must never block
+        # ingestion, so the judges still get the measured snapshot and the
+        # project still reaches a verdict.
+        try:
+            count, truncated = run_with_timeout(
+                lambda: _index_texts(project_id, texts),
+                settings.index_timeout,
+                label="code-index",
+            )
+            snapshot["indexed_chunks"] = count
+            snapshot["index_truncated"] = truncated
+            log.info("Indexed %s chunks from %s for project %s", count, ref.url, project_id)
+        except Exception as exc:
+            log.warning("Could not index %s (continuing without a code index): %s", ref.url, exc)
 
     return snapshot
+
+
+def _index_texts(project_id: str, texts: dict[str, str]) -> tuple[int, bool]:
+    """Chunk the (priority-ordered) source files and store them in Chroma."""
+    chunks: list[dict] = []
+    for path, text in texts.items():
+        if len(chunks) >= settings.repo_max_chunks:
+            break
+        chunks.extend(_chunk_file(path, text, _language(path)))
+    chunks = chunks[: settings.repo_max_chunks]
+    collection = vectorstore.reset_code_collection(project_id)
+    vectorstore.add_chunks(collection, chunks)
+    return len(chunks), len(chunks) >= settings.repo_max_chunks

@@ -14,10 +14,12 @@ from typing import Callable
 
 from agents import code_agent, head_judge, market_agent, product_agent
 from agents.base import JudgeContext, now_iso
+from config import settings
 from db import Json, connection, execute, fetch_one
 from services import vectorstore
 from services.criteria import hackathon_criteria
 from services.repo_ingest import ingest_repository
+from services.watchdog import run_with_timeout
 
 log = logging.getLogger(__name__)
 
@@ -53,7 +55,13 @@ def _stage(project_id: str, stage: str, fn: Callable[[], dict | None], heartbeat
     heartbeat()
     _set_stage(project_id, stage, "running")
     try:
-        result = fn()
+        # A stage that blocks (network, subprocess, embedder) is abandoned at the
+        # deadline instead of holding a worker thread forever and stalling the queue.
+        result = run_with_timeout(fn, settings.stage_timeout, label=stage)
+    except TimeoutError:
+        log.error("Stage %s timed out for %s after %ss", stage, project_id, settings.stage_timeout)
+        _set_stage(project_id, stage, "failed", f"Timed out after {settings.stage_timeout}s")
+        return None
     except Exception as exc:
         log.exception("Stage %s failed for %s", stage, project_id)
         _set_stage(project_id, stage, "failed", str(exc))
@@ -98,10 +106,18 @@ def evaluate_project(project_id: str, heartbeat: Callable[[], None] = lambda: No
     heartbeat()
     _set_stage(project_id, "ingest", "running")
     try:
-        snapshot = ingest_repository(project["github_link"], project_id=project_id)
+        snapshot = run_with_timeout(
+            lambda: ingest_repository(project["github_link"], project_id=project_id),
+            settings.stage_timeout,
+            label="ingest",
+        )
         execute("UPDATE projects SET repo_snapshot = %s WHERE project_id = %s", (Json(snapshot), project_id))
         _set_stage(project_id, "ingest", "done",
                    f"{snapshot['files']['analyzed']} files, {snapshot['indexed_chunks']} chunks indexed")
+    except TimeoutError:
+        ingest_error = f"Repository ingestion timed out after {settings.stage_timeout}s"
+        log.error("Ingestion timed out for %s after %ss", project_id, settings.stage_timeout)
+        _set_stage(project_id, "ingest", "failed", ingest_error)
     except Exception as exc:  # IngestError or unexpected clone failures
         ingest_error = str(exc)
         log.warning("Ingestion failed for %s: %s", project_id, exc)
